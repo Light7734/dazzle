@@ -8,7 +8,7 @@ steps:
     image: node:latest
     volumes:
       - name: dazzle
-        path: /dazzle:/dazzle
+        path: /home/light/dazzle/:/dazzle
     commands:
       - npm install
       - npm run build
