@@ -16,6 +16,8 @@ steps:
       - ls .
       - ls ..
       - ls /
+      - ls /drone
+      - ls /drone/*
       - ls /home/
       - cp -r ./build/* /dazzle/
       - ls /dazzle/
