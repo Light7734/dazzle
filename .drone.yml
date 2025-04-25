@@ -15,7 +15,8 @@ steps:
       - pwd
       - ls .
       - ls ..
-      - ls /
+      - ls -lA /
+      - ls -lA /bonfire
       - ls /drone
       - ls /drone/*
       - ls /home/
