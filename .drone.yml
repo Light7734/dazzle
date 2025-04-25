@@ -1,0 +1,19 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: build_deploy
+    privileged: true
+    image: node:latest
+    volumes:
+      - name: dazzle
+        path: /dazzle:/dazzle
+    commands:
+      - npm install
+      - npm run build
+      - cp -r ./build/* /dazzle/
+      - ls .
+      - ls /
+      - ls /dazzle/
+      - cat /dazzle/index.html
