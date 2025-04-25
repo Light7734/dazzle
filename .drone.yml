@@ -10,10 +10,13 @@ steps:
       - name: dazzle
         path: /home/light/dazzle/:/dazzle
     commands:
-      - npm install
-      - npm run build
+      # - npm install
+      # - npm run build
+      - pwd
       - ls .
+      - ls ..
       - ls /
+      - ls /home/
       - cp -r ./build/* /dazzle/
       - ls /dazzle/
       - cat /dazzle/index.html
