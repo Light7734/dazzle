@@ -6,20 +6,7 @@ steps:
   - name: build_deploy
     privileged: true
     image: node:latest
-    volumes:
-      - name: dazzle
-        path: /home/light/dazzle/:/dazzle
     commands:
-      # - npm install
-      # - npm run build
-      - pwd
-      - ls .
-      - ls ..
-      - ls -lA /
-      - ls -lA /bonfire
-      - ls /drone
-      - ls /drone/*
-      - ls /home/
+      - npm install
+      - npm run build
       - cp -r ./build/* /dazzle/
-      - ls /dazzle/
-      - cat /dazzle/index.html
