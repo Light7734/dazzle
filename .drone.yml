@@ -12,8 +12,8 @@ steps:
     commands:
       - npm install
       - npm run build
-      - cp -r ./build/* /dazzle/
       - ls .
       - ls /
+      - cp -r ./build/* /dazzle/
       - ls /dazzle/
       - cat /dazzle/index.html
