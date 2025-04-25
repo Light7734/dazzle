@@ -1,0 +1,33 @@
+* {
+    color: #fbf1c7;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.body {
+    background-color: #1d2021
+}
+
+br {
+    margin-bottom: 1em;
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: .3em;
+}
+
+h2 {
+    font-size: 1.7em;
+    margin-bottom: .3em;
+    margin-top: .6em;
+}
+
+.article_body {
+    margin-left: 10em;
+    margin-right: 10em;
+    padding: 1em;
+    background-color: #282828;
+    text-align: justify;
+    max-width: 80ch;
+    /* Adjust as necessary */
+}
