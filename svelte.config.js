@@ -20,7 +20,7 @@ const config = {
 		adapter: adapter()
 	},
 
-	extensions: ['.svelte', '.svx', 'md']
+	extensions: ['.svelte', '.svx', '.md']
 };
 
 export default config;
