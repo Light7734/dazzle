@@ -1,49 +1,56 @@
 # The Graphics Pipeline
 Ever wondered how games put all that gore on your display? Well you're about to find out!
 
+<br/>
 At the heart of rendering, is the "Graphics Pipeline". And like any pipeline, it's comprised 
 of several "stages", each of which can be a pipeline in itself or even parallelized.
 Each stage takes some input data (and configuration), to generate some output for the next stage. 
 
+<br/>
 We can coarsely divide the entire pipeline into 4 stages:
 Application -> [Geometry Processing] -> Rasterization -> Pixel Processing
 The pipeline will then serve a "rendered image" to your pretty eyes using your display.
 
+<br/>
 But to avoid drowning you in overviews, let's jump right into the details of the "Geometry Processing"
 stage and have a recap afterwards to demystify our 4-stage division!
 
-# Vertices (points in space)
+## Vertices (points in space)
 In order to render a murder scene, we need to have a way of representing the deceased in computer memory.
 We only care about the "surface" since we won't be seeing the insides anyways--We don\'t want to either.
 At this stage, we only care about the "shape" or the "geometry" of the "surface",
 texturing, lighting and all the sweet gory details comes at a much later stage once all the "geometry" has been processed.
 
+<br/>
 There are several ways to "represent 3d objects" for a computer to understand.
 For instance, _NURB_(Non-uniform rational B-spline) surfaces are great for representing "curves"
 and it's all about the "high-precision" needed to do _CAD_(computer assisted design).
 We could also do "ray-tracing" using fancy equations for rendering photo-realistic images.
 
+<br/>
 These are all great--ignoring the fact that they would take "an eternity" to process.
 But what we need is a hardware-friendly approach that can do this for an entire scene with
 hundereds of thousands of objects for at least 60 times undr a second. What we need is "polygonal modeling".
 
+<br/>
 "Polygonal modeling" allows us to do "real-time rendering". The idea is that we only need an
 "approximation" of a surface to render it "realisticly-enough" for us to have some fun killing time!
 We can achieve this approximation using a collection of "triangles", "lines" and "dots" (primitives),
 which themselves are composed of a series of "vertices" (points in space).
 
+<br/>
 A "vertex" is simply a point in space.
 Once we get enough of these "points", we can conncet them to form "primitives" such as "triangles", "lines" and "dots".
 And once we have enough "primitives" together, they form a "model" or a "mesh" (that we need for our corpse).
 With some interesting models, we can compose a "scene".
 
+<br/>
 But let's not get ahead of ourselves. The primary type of "primitive" we care about during "polygonal modeling"
 is a "triangle". But why not squares or polygons with variable number of edges?
 
-# Why Triangles?
+## Why Triangles?
 "Always Planar":
 Triangles can never be __non-planar__(reside in more than 1 plane)! In Euclidean geometry, any 
-3 
 
 
 "Normal surface:"
@@ -52,38 +59,41 @@ Triangles can never be __non-planar__(reside in more than 1 plane)! In Euclidean
 
 "Predictable Winding Order:"
 
-# Primitive Topologies
+## Primitive Topologies
 
-# Indices
+## Indices
 
-# Input Assembler
+## Input Assembler
 
-# Coordinate System -- Local Space
+## Coordinate System -- Local Space
 
-# Coordinate System -- World Space
+## Coordinate System -- World Space
 
-# Coordinate system -- View Space
+## Coordinate system -- View Space
 
-# Coordinate system -- Clip Space
+## Coordinate system -- Clip Space
 
-# Coordinate system -- Screen Space
+## Coordinate system -- Screen Space
 
-# Vertex Shader
+## Vertex Shader
 
-# Tessellation & Geometry Shaders
+## Tessellation & Geometry Shaders
 
-# Rasterizer
+## Rasterizer
 
-# Pixel Shader
+## Pixel Shader
 
-# Output Merger 
+## Output Merger 
 
-# The Future
+## The Future
 
-# Conclusion
+## Conclusion
 
-# Sources
+## Sources
 [Tomas Akenine Moller - Real-Time Rendering 4th Edition](https://www.realtimerendering.com/intro.html)
+
+<br/>
+
 [LearnOpenGL - Hello Triangle](https://learnopengl.com/Getting-started/Hello-Triangle)
 [LearnOpenGL - Face Culling](https://learnopengl.com/Advanced-OpenGL/Face-culling)
 [Wikipedia - Polygonal Modeling](https://en.wikipedia.org/wiki/Polygonal_modeling)
