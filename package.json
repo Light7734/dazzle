@@ -38,6 +38,7 @@
 		"prettier": "^3.5.3",
 		"prettier-plugin-svelte": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",
+		"rehype-mermaid": "^3.0.0",
 		"svelte": "^5.28.2",
 		"svelte-check": "^4.1.6",
 		"tailwindcss": "^4.1.4",
@@ -50,5 +51,11 @@
 		"onlyBuiltDependencies": [
 			"esbuild"
 		]
+	},
+	"dependencies": {
+		"mermaid": "^11.6.0",
+		"playwright": "^1.52.0",
+		"rehype-katex-svelte": "^1.2.0",
+		"remark-math": "^6.0.0"
 	}
 }

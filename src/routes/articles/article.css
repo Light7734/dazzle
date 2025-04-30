@@ -1,47 +1,33 @@
-@import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-
 * {
     color: #ebdbb2;
-    font-family: "Inter", sans-serif;
+    font-family: 'Inter';
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
 }
 
-br {
-    margin-bottom: 1em;
+strong {
+    font-weight: 600;
+    font-style: italic;
+    color: #fabd2f;
 }
 
 h1 {
+    display: block;
     font-size: 2em;
-    margin-bottom: .3em;
+    margin-top: 0.0em;
+    margin-bottom: 0.0em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
 }
 
 h2 {
-    font-size: 1.7em;
-    margin-bottom: .3em;
-    margin-top: .6em;
-}
-
-.body {
-    background-color: #1d2021;
-    display: flex;
-}
-
-.article_body {
-    flex: 3;
-    margin-left: 10em;
-    margin-right: 10em;
-    padding: 1em;
-    background-color: #282828;
-    text-align: justify;
-    max-width: 80ch;
-
-    border-left: 1px solid #7c6f64;
-    border-right: 1px solid #7c6f64;
-}
-
-.article_padding {
-    flex: 1;
+    display: block;
+    font-size: 1.5em;
+    margin-top: 0.83em;
+    margin-bottom: 0.0em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
 }
