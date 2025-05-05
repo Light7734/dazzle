@@ -1,13 +1,12 @@
 <script lang="ts">
 </script>
 
-<div>
-</div>
+<div class="horizontal_break"></div>
 
 <style>
-    div {
-        margin-top: 1em;
-        background-color: #928374;
-        height: 1px;
-    }
+	.horizontal_break {
+		margin-top: 1em;
+		background-color: #928374;
+		height: 1px;
+	}
 </style>

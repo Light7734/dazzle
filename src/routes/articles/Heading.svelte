@@ -1,25 +1,27 @@
 <script lang="ts">
 	import './article.css';
+	import HorizontalBreak from './HorizontalBreak.svelte';
 
 	export let title;
 	export let date;
 </script>
 
-<div>
+<div class="heading">
 	<h1>{title}</h1>
 	<p>{date}</p>
 </div>
+<HorizontalBreak />
 
 <style>
-	div {
+	.heading {
 		width: 100%;
 	}
 
-	h1 {
+	.heading > h1 {
 		display: inline-block;
 	}
 
-	p {
+	.heading > p {
 		float: right;
 		padding-left: auto;
 		padding-right: auto;
