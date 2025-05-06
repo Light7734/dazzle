@@ -35,27 +35,27 @@ Ever been jump-scared by this sight in an FPS? Why are things rendered like that
 
 
 In order to display a scene (like a murder scene), 
-we need to have a way of **representing** the **surface** of the composing objects (like corpses) in computer-memory.
-We only care about the **surface** since we won't be seeing the insides anyways---Not that we want to.
+we need to have a way of **representing** the **surface** of the composing objects (like corpses) in computer memory.
+We only care about the **surface** since we won't be seeing the insides anyway---Not that we want to.
 At this stage, we only care about the **shape** or the **geometry** of the **surface**.
-Texturing, lighting and all the sweet gory details comes at a much later stage once all the **geometry** have been processed.
+Texturing, lighting, and all the sweet gory details come at a much later stage once all the **geometry** has been processed.
 
-But how do we represent surfaces in computer-memory?
+But how do we represent surfaces in computer memory?
 
 ## Vertices
 
 There are several ways to **represent** the surfaces of 3d objects for a computer to understand.
-For instance, **NURB surfaces** are great for representing **curves**
-and it's all about the **high-precision** needed to do **CAD**.
-We could also do **ray-tracing** using fancy equations for rendering **photo-realistic** images.
+For instance, **NURB surfaces** are great for representing **curves**, and it's all about the
+**high precision** needed to do **CAD**. We could also do **ray-tracing** using fancy equations for
+rendering **photo-realistic** images.
 
 These are all great--ignoring the fact that they would take an eternity to process...
 But what we need is a **performant** approach that can do this for an entire scene with
-hundereds of thousands of objects (like a lot of corpses) in under a small fraction of a second. What we need is **polygonal modeling**.
+hundreds of thousands of objects (like a lot of corpses) in under a small fraction of a second. What we need is **polygonal modeling**.
 
 **Polygonal modeling** enables us to do an exciting thing called **real-time rendering**. The idea is that we only need an
-**approximation** of a surface to render it **realisticly-enough** for us to have some fun killing time!
-We can achieve this approximation using a collection of **triangles**, **lines** and **dots** (primitives),
+**approximation** of a surface to render it **realistically enough** for us to have some fun killing time!
+We can achieve this approximation using a collection of **triangles**, **lines**, and **dots** (primitives),
 which themselves are composed of a series of **vertices** (points in space).
 
 <Image 
@@ -63,19 +63,18 @@ which themselves are composed of a series of **vertices** (points in space).
 /> 
 
 A **vertex** is simply a point in space.
-Once we get enough of these **points**, we can conncet them to form **primitives** such as **triangles**, **lines** and **dots**.
+Once we get enough of these **points**, we can connect them to form **primitives** such as **triangles**, **lines**, and **dots**.
 And once we connect enough of these **primitives** together, they form a **model** or a **mesh** (that we need for our corpse).
 With some interesting models put together, we can compose a **scene** (like a murder scene :D).
 
 <Image 
-    paths={["/images/bunny.png"]} 
+    paths={["/images/bunny.jpg"]} 
 /> 
 
 But let's not get ahead of ourselves. The primary type of **primitive** that we care about during **polygonal modeling**
-is a **triangle**. But why not squares or polygons with variable number of edges?
+is a **triangle**. But why not squares or polygons with a variable number of edges?
 
 ## Why Triangles?
-
 
 In **Euclidean geometry**, triangles are always **planar** (they exist only in one plane), 
 any polygon composed of more than 3 points may break this rule, but why does polygons residing in one plane so important 
@@ -86,28 +85,26 @@ to us?
 /> 
 
 When a polygon exists only in one plane, we can safely imply that **only one face** of it can be visible
-at any one time, this enables us to utilize a huge optimization technique called **back-face culling**.
+at any one time; this enables us to utilize a huge optimization technique called **back-face culling**.
 Which means we avoid wasting a ton of **precious processing time** on the polygons that 
 we know won't be visible to us. We can safely **cull** the **back-faces** since we won't
-be seeing the **back** of a polygon when it's in the context of a closed off model. 
-We figure this by simply using the **winding-order** of the triangle to determine whether we're looking at the
+be seeing the **back** of a polygon when it's in the context of a closed-off model. 
+We figure this out by simply using the **winding order** of the triangle to determine whether we're looking at the
 back of the triangle or the front of it.
 
 
 Normal surface
 
+Triangles also have a very small **memory footprint**; for instance, when using the **triangle-strip** topology (more on this very soon), for each additional triangle after the first one, only **one extra vertex** is needed.
 
-Triangles also have very small **memory footprint**, for instance when using the **triangle-strip** topology (more on this very soon), for each additional triangle after the first one, only **one extra vertex** is needed.
-
-
-The most important attribute however (in my opinion) is the **algorithmic simplicity**.
-Any polygon or shape can be composed from a **set of triangle**, for instance a rectangle is 
-simply **two co-planar triangles**.
-It is becoming an increasingly more common practice in computer science to break down
+The most important attribute, in my opinion, is the **algorithmic simplicity**.
+Any polygon or shape can be composed from a **set of triangles**; for instance, a rectangle is 
+simply **two coplanar triangles**.
+Also, it is becoming a common practice in computer science to break down
 hard problems into simpler, smaller problems. This will be more convincing when we cover the **rasterization** stage :)
 
 
-Bonus point: present day **hardwares** and **algorithms** have become **extremely efficient** at processing 
+Bonus point: present-day **hardware** and **algorithms** have become **extremely efficient** at processing 
 triangles (sorting, rendering, etc) after eons of evolving around them.
 
 
