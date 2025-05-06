@@ -3,6 +3,10 @@ title: The Graphics Pipeline
 date: "April 20 - 2025"
 ---
 
+<script>
+import Image from "../Image.svelte"
+</script>
+
 Ever wondered how games put all that gore on your display? All that beauty is brought into life by
 a process called **rendering**, and at the heart of it, is the **graphics pipeline**.
 In this article we'll dive deep into  the intricate details of this beast.
@@ -25,6 +29,11 @@ stage and have a recap afterwards to demystify this 4-stage division.
 
 Ever been jump-scared by this sight in an FPS? Why are things rendered like that?
 
+<Image 
+    paths={["/images/boo.png"]} 
+/> 
+
+
 In order to display a scene (like a murder scene), 
 we need to have a way of **representing** the **surface** of the composing objects (like corpses) in computer-memory.
 We only care about the **surface** since we won't be seeing the insides anyways---Not that we want to.
@@ -40,36 +49,41 @@ For instance, **NURB surfaces** are great for representing **curves**
 and it's all about the **high-precision** needed to do **CAD**.
 We could also do **ray-tracing** using fancy equations for rendering **photo-realistic** images.
 
-
 These are all great--ignoring the fact that they would take an eternity to process...
 But what we need is a **performant** approach that can do this for an entire scene with
 hundereds of thousands of objects (like a lot of corpses) in under a small fraction of a second. What we need is **polygonal modeling**.
-
 
 **Polygonal modeling** enables us to do an exciting thing called **real-time rendering**. The idea is that we only need an
 **approximation** of a surface to render it **realisticly-enough** for us to have some fun killing time!
 We can achieve this approximation using a collection of **triangles**, **lines** and **dots** (primitives),
 which themselves are composed of a series of **vertices** (points in space).
 
+<Image 
+    paths={["/images/polygon_sphere.webp"]} 
+/> 
 
 A **vertex** is simply a point in space.
 Once we get enough of these **points**, we can conncet them to form **primitives** such as **triangles**, **lines** and **dots**.
 And once we connect enough of these **primitives** together, they form a **model** or a **mesh** (that we need for our corpse).
 With some interesting models put together, we can compose a **scene** (like a murder scene :D).
 
+<Image 
+    paths={["/images/bunny.png"]} 
+/> 
 
 But let's not get ahead of ourselves. The primary type of **primitive** that we care about during **polygonal modeling**
 is a **triangle**. But why not squares or polygons with variable number of edges?
 
 ## Why Triangles?
 
+
 In **Euclidean geometry**, triangles are always **planar** (they exist only in one plane), 
 any polygon composed of more than 3 points may break this rule, but why does polygons residing in one plane so important 
 to us?
 
-
-Being non-planar makes it rather difficult to determine 
-
+<Image 
+    paths={["/images/planar.jpg", "/images/non_planar_1.jpg", "/images/non_planar_2.png"]} 
+/> 
 
 When a polygon exists only in one plane, we can safely imply that **only one face** of it can be visible
 at any one time, this enables us to utilize a huge optimization technique called **back-face culling**.
