@@ -8,9 +8,15 @@ importers:
 
   .:
     dependencies:
+      '@lucide/svelte':
+        specifier: ^0.509.0
+        version: 0.509.0(svelte@5.28.2)
       katex:
         specifier: ^0.16.22
         version: 0.16.22
+      lucide:
+        specifier: ^0.509.0
+        version: 0.509.0
       mermaid:
         specifier: ^11.6.0
         version: 11.6.0
@@ -441,6 +447,11 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@lucide/svelte@0.509.0':
+    resolution: {integrity: sha512-rG/oNz5HiuG+9xZawNxD08x5sIgvfIcFVDx7J2YAOHNK9+zDAro/DAhWLOdmE0eag5CYzxwAWh8LVowXpZvW/g==}
+    peerDependencies:
+      svelte: ^5
 
   '@mermaid-js/parser@0.4.0':
     resolution: {integrity: sha512-wla8XOWvQAwuqy+gxiZqY+c7FokraOTHRWMsbB4AgRx9Sy7zKslNyejy7E+a77qHfey5GXw/ik3IXv/NHMJgaA==}
@@ -1885,6 +1896,9 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
+  lucide@0.509.0:
+    resolution: {integrity: sha512-+PUi/uilEjgcBuaLXq4y4fh/AHLgFuFyNrMbezuhofkiqRZbbj6cf5E29VndCuFcGsGpo9WIKocmfBB2GTvS7w==}
+
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
@@ -2942,6 +2956,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@lucide/svelte@0.509.0(svelte@5.28.2)':
+    dependencies:
+      svelte: 5.28.2
 
   '@mermaid-js/parser@0.4.0':
     dependencies:
@@ -4445,6 +4463,8 @@ snapshots:
   loupe@3.1.3: {}
 
   lru-cache@10.4.3: {}
+
+  lucide@0.509.0: {}
 
   lz-string@1.5.0: {}
 

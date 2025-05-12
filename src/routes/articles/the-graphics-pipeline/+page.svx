@@ -5,6 +5,7 @@ date: "April 20 - 2025"
 
 <script>
 import Image from "../Image.svelte"
+import Note from "../Note.svelte"
 </script>
 
 Ever wondered how games put all that gore on your display? All that beauty is brought into life by
@@ -14,13 +15,34 @@ In this article we'll dive deep into  the intricate details of this beast.
 Like any pipeline, the **graphics pipeline** is comprised 
 of several **stages**, each of which can be a pipeline in itself or even parallelized.
 Each stage takes some input (data and configuration) to generate some output data for the next stage.
-We can coarsely divide the pipeline into **4 stages**: 
 
-```math
-\texttt{Application} \rightarrow \color{#fabd2f}{\texttt{GeometryProcessing}}\color{none} \rightarrow \texttt{Rasterization} \rightarrow \texttt{PixelProcessing}
-```
+<Note title="A coarse division of the graphics pipeline">
 
-The pipeline will then serve the output of the **pixel processing** stage, which is a **rendered image**,
+Application --> Geometry Processing --> Rasterization --> Pixel Processing --> Presentation
+</Note>
+
+Before the heavy rendering work starts on the **GPU**, we simulate the world through systems
+like physics engine, game logic, networking, etc, during the **Application** stage.
+This stage is mostly ran on the **CPU**, therefore it is very efficient on executing 
+**sequentially dependendent** logic.
+
+<Note title="Sequentially dependendent logic">
+
+A type of execution flow where the operations depend on the results of previous steps, limiting parallel execution.
+In other words, **CPUs** are great at executing **branch-heavy** code, and **GPUs** are geared
+towards executing **branch-less** or **branch-light** code.
+</Note>
+
+
+The updated scene data is then prepped and fed to the GPU for **Geometry Processing**, this is 
+where we figure out where everything ends up on our screen.
+
+Then the final geometric data are converted into **pixels** and prepped for pixel processing stage via a process called **Rasterization**.
+
+The **Pixel Processing** stage then uses the rasterized geometry to do **lighting**, **texturing**, and all the sweet gory details.
+
+
+The pipeline will then serve (present) the output of the **pixel processing** stage, which is a **rendered image**,
 to your pretty eyes using your display.
 But to avoid drowning you in overviews, let's jump right into the gory details of the **geometry processing**
 stage and have a recap afterwards to demystify this 4-stage division.
@@ -74,6 +96,11 @@ With some interesting models put together, we can compose a **scene** (like a mu
 But let's not get ahead of ourselves. The primary type of **primitive** that we care about during **polygonal modeling**
 is a **triangle**. But why not squares or polygons with a variable number of edges?
 
+<Note title="Neque porro quisquam est qui dolorem">
+
+Lorem ipsum dolor sit **amet**, consectetur adipiscing elit. **Fusce** rhoncus eleifend elementum. Mauris quis **arcu justo**. Proin pellentesque eleifend sapien, quis dictum lacus sodales eget. Pellentesque congue dapibus libero, nec finibus est tempus varius. Duis tincidunt arcu nulla, **ultrices** malesuada tellus convallis a. Aenean pulvinar ligula arcu, **vitae** cursus mi maximus sed. Morbi iaculis efficitur suscipit. Cras **in** vehicula est, ac molestie tortor. Donec sed **quam** pulvinar, pulvinar nulla vel, aliquet enim. Curabitur **tempus**, nisi quis posuere lacinia, sapien est maximus libero, vehicula hendrerit nisi **elit** sed ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames **ac** turpis egestas. Praesent auctor velit eu justo suscipit, quis lobortis **elit** placerat. 
+</Note >
+
 ## Why Triangles?
 
 In **Euclidean geometry**, triangles are always **planar** (they exist only in one plane), 
@@ -98,10 +125,9 @@ Normal surface
 Triangles also have a very small **memory footprint**; for instance, when using the **triangle-strip** topology (more on this very soon), for each additional triangle after the first one, only **one extra vertex** is needed.
 
 The most important attribute, in my opinion, is the **algorithmic simplicity**.
-Any polygon or shape can be composed from a **set of triangles**; for instance, a rectangle is 
-simply **two coplanar triangles**.
-Also, it is becoming a common practice in computer science to break down
-hard problems into simpler, smaller problems. This will be more convincing when we cover the **rasterization** stage :)
+Any polygon or shape can be composed from a **set of triangles**; for instance, a rectangle is simply **two coplanar triangles**.
+Also, it is a common practice in computer science to break down hard problems into simpler, smaller problems. 
+This will be a lot more convincing when we cover the **rasterization** stage :)
 
 
 Bonus point: present-day **hardware** and **algorithms** have become **extremely efficient** at processing 
