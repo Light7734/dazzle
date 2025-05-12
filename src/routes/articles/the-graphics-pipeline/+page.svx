@@ -6,6 +6,7 @@ date: "April 20 - 2025"
 <script>
 import Image from "../Image.svelte"
 import Note from "../Note.svelte"
+import Tip from "../Tip.svelte"
 </script>
 
 Ever wondered how games put all that gore on your display? All that beauty is brought into life by
@@ -21,35 +22,41 @@ Each stage takes some input (data and configuration) to generate some output dat
 Application --> Geometry Processing --> Rasterization --> Pixel Processing --> Presentation
 </Note>
 
-Before the heavy rendering work starts on the **GPU**, we simulate the world through systems
-like physics engine, game logic, networking, etc, during the **Application** stage.
-This stage is mostly ran on the **CPU**, therefore it is very efficient on executing 
-**sequentially dependendent** logic.
-
-<Note title="Sequentially dependendent logic">
-
+Before the heavy rendering work starts on the <Tip text="GPU">Graphics Processing Unit</Tip>,
+we simulate and update the world through systems such as physics engine, game logic, networking, etc.
+during the **Application** stage.
+This stage is mostly ran on the <Tip text="CPU">Central Processing Unit</Tip>, 
+therefore it is extremely efficient on executing <Tip text="sequentially dependendent logic">
 A type of execution flow where the operations depend on the results of previous steps, limiting parallel execution.
 In other words, **CPUs** are great at executing **branch-heavy** code, and **GPUs** are geared
-towards executing **branch-less** or **branch-light** code.
-</Note>
+towards executing a TON of **branch-less** or **branch-light** code in parallel. </Tip>.
 
+The updated scene data is then prepped and fed to the **GPU** for **geometry processing**; which is 
+where we figure out where everything ends up on our screen. We'll cover this stage in depth very soon so don't panic (yet).
 
-The updated scene data is then prepped and fed to the GPU for **Geometry Processing**, this is 
-where we figure out where everything ends up on our screen.
+Afterwards, the final geometric data are converted into <Tip text="pixels"> Pixel is the shorthand for **picture-element**, Voxel is the shorthand for **volumetric-element**. </Tip>
+and prepped for the **pixel processing** stage via a process called **rasterization**.
+In other words, this stage converts a rather abstract and internal presentation (geometry)
+into something more concrete (pixels). It's called rasterization because end the product is a <Tip text="raster">Noun. A rectangular pattern of parallel scanning lines followed by the electron beam on a television screen or computer monitor. -- 1930s: from German Raster, literally ‘screen’, from Latin rastrum ‘rake’, from ras- ‘scraped’, from the verb radere. ---Oxford Languages</Tip> of pixels.
 
-Then the final geometric data are converted into **pixels** and prepped for pixel processing stage via a process called **Rasterization**.
+The **pixel processing** stage then uses the rasterized geometry data (pixel data) to do **lighting**, **texturing**, 
+and all the sweet gory details of a murder scene. 
+This stage is often, but not always, the most computationally expensive. 
+A huge problem that a good rendering engine needs to solve is how to be **performant**. And a great deal
+of **optimization** can be done through **culling** the work that we can deem unnecessary/redundant in each
+stage before it's passed on to the next. More on **culling** later don't worry (yet 🙂).
 
-The **Pixel Processing** stage then uses the rasterized geometry to do **lighting**, **texturing**, and all the sweet gory details.
 
 
 The pipeline will then serve (present) the output of the **pixel processing** stage, which is a **rendered image**,
-to your pretty eyes using your display.
+to your pretty eyes 👁👄👁 using your <Tip text="display">Usually a monitor but the technical term for it is
+the target **surface**. Which can be anything like a VR headset or some other crazy surface used for displaying purposes.</Tip>.
 But to avoid drowning you in overviews, let's jump right into the gory details of the **geometry processing**
-stage and have a recap afterwards to demystify this 4-stage division.
+stage and have a recap afterwards!
 
 ## Surfaces
 
-Ever been jump-scared by this sight in an FPS? Why are things rendered like that?
+Ever been jump-scared by this sight in an <Tip text="FPS">First Person (Shooter) perspective</Tip>? Why are (the inside of) things rendered like that?
 
 <Image 
     paths={["/images/boo.png"]} 
@@ -57,7 +64,7 @@ Ever been jump-scared by this sight in an FPS? Why are things rendered like that
 
 
 In order to display a scene (like a murder scene), 
-we need to have a way of **representing** the **surface** of the composing objects (like corpses) in computer memory.
+we need to have a way of **representing** the **surface** of its composing objects (like corpses) in computer memory.
 We only care about the **surface** since we won't be seeing the insides anyway---Not that we want to.
 At this stage, we only care about the **shape** or the **geometry** of the **surface**.
 Texturing, lighting, and all the sweet gory details come at a much later stage once all the **geometry** has been processed.
@@ -67,11 +74,12 @@ But how do we represent surfaces in computer memory?
 ## Vertices
 
 There are several ways to **represent** the surfaces of 3d objects for a computer to understand.
-For instance, **NURB surfaces** are great for representing **curves**, and it's all about the
-**high precision** needed to do **CAD**. We could also do **ray-tracing** using fancy equations for
+For instance, <Tip text="NURBS">
+**Non-uniform rational basis spline** is a mathematical model using **basis splines** (B-splines) that is commonly used in computer graphics for representing curves and surfaces. It offers great flexibility and precision for handling both analytic (defined by common mathematical formulae) and modeled shapes.  ---Wikipedia</Tip> surfaces are great for representing **curves**, and it's all about the
+**high precision** needed to do <Tip text="CAD">Computer Assisted Design</Tip>. We could also do **ray-tracing** using fancy equations for
 rendering **photo-realistic** images.
 
-These are all great--ignoring the fact that they would take an eternity to process...
+These are all great---ignoring the fact that they would take an eternity to process...
 But what we need is a **performant** approach that can do this for an entire scene with
 hundreds of thousands of objects (like a lot of corpses) in under a small fraction of a second. What we need is **polygonal modeling**.
 
@@ -95,11 +103,6 @@ With some interesting models put together, we can compose a **scene** (like a mu
 
 But let's not get ahead of ourselves. The primary type of **primitive** that we care about during **polygonal modeling**
 is a **triangle**. But why not squares or polygons with a variable number of edges?
-
-<Note title="Neque porro quisquam est qui dolorem">
-
-Lorem ipsum dolor sit **amet**, consectetur adipiscing elit. **Fusce** rhoncus eleifend elementum. Mauris quis **arcu justo**. Proin pellentesque eleifend sapien, quis dictum lacus sodales eget. Pellentesque congue dapibus libero, nec finibus est tempus varius. Duis tincidunt arcu nulla, **ultrices** malesuada tellus convallis a. Aenean pulvinar ligula arcu, **vitae** cursus mi maximus sed. Morbi iaculis efficitur suscipit. Cras **in** vehicula est, ac molestie tortor. Donec sed **quam** pulvinar, pulvinar nulla vel, aliquet enim. Curabitur **tempus**, nisi quis posuere lacinia, sapien est maximus libero, vehicula hendrerit nisi **elit** sed ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames **ac** turpis egestas. Praesent auctor velit eu justo suscipit, quis lobortis **elit** placerat. 
-</Note >
 
 ## Why Triangles?
 
@@ -179,4 +182,5 @@ So, we got our set of triangles, but how do we make a model out of them?
 [Wikipedia - Polygonal Modeling](https://en.wikipedia.org/wiki/Polygonal_modeling)
 [Wikipedia - Non-uniform Rational B-spline Surfaces](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline)
 [Wikipedia - Computer Aided Design (CAD)](https://en.wikipedia.org/wiki/Computer-aided_design)
+[Wikipedia - Rasterization](https://en.wikipedia.org/wiki/Rasterisation)
 [Stackoverflow - Why do 3D engines primarily use triangles to draw surfaces?](https://stackoverflow.com/questions/6100528/why-do-3d-engines-primarily-use-triangles-to-draw-surfaces)
