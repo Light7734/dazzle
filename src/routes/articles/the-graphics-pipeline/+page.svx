@@ -46,8 +46,6 @@ A huge problem that a good rendering engine needs to solve is how to be **perfor
 of **optimization** can be done through **culling** the work that we can deem unnecessary/redundant in each
 stage before it's passed on to the next. More on **culling** later don't worry (yet 🙂).
 
-
-
 The pipeline will then serve (present) the output of the **pixel processing** stage, which is a **rendered image**,
 to your pretty eyes 👁👄👁 using your <Tip text="display">Usually a monitor but the technical term for it is
 the target **surface**. Which can be anything like a VR headset or some other crazy surface used for displaying purposes.</Tip>.
@@ -75,7 +73,7 @@ But how do we represent surfaces in computer memory?
 
 There are several ways to **represent** the surfaces of 3d objects for a computer to understand.
 For instance, <Tip text="NURBS">
-**Non-uniform rational basis spline** is a mathematical model using **basis splines** (B-splines) that is commonly used in computer graphics for representing curves and surfaces. It offers great flexibility and precision for handling both analytic (defined by common mathematical formulae) and modeled shapes.  ---Wikipedia</Tip> surfaces are great for representing **curves**, and it's all about the
+**Non-uniform rational basis spline** is a mathematical model using **basis splines** (B-splines) that is commonly used in computer graphics for representing curves and surfaces. It offers great flexibility and precision for handling both analytic (defined by common mathematical formulae) and modeled shapes. ---Wikipedia</Tip> surfaces are great for representing **curves**, and it's all about the
 **high precision** needed to do <Tip text="CAD">Computer Assisted Design</Tip>. We could also do **ray-tracing** using fancy equations for
 rendering **photo-realistic** images.
 
@@ -106,7 +104,7 @@ is a **triangle**. But why not squares or polygons with a variable number of edg
 
 ## Why Triangles?
 
-In **Euclidean geometry**, triangles are always **planar** (they exist only in one plane), 
+In <Tip text="Euclidean geometry"> Developed by **Euclid** around 300 BCE, is based on five axioms, including the parallel postulate. It describes properties of shapes, angles, and space using deductive reasoning. It remained the standard model of geometry for centuries until non-Euclidean geometries and general relativity showed its limits. It's still widely used in education, engineering, and **computer graphics**. ---Wikipedia </Tip>, triangles are always **planar** (they exist only in one plane), 
 any polygon composed of more than 3 points may break this rule, but why does polygons residing in one plane so important 
 to us?
 
@@ -121,9 +119,6 @@ we know won't be visible to us. We can safely **cull** the **back-faces** since 
 be seeing the **back** of a polygon when it's in the context of a closed-off model. 
 We figure this out by simply using the **winding order** of the triangle to determine whether we're looking at the
 back of the triangle or the front of it.
-
-
-Normal surface
 
 Triangles also have a very small **memory footprint**; for instance, when using the **triangle-strip** topology (more on this very soon), for each additional triangle after the first one, only **one extra vertex** is needed.
 
@@ -183,4 +178,5 @@ So, we got our set of triangles, but how do we make a model out of them?
 [Wikipedia - Non-uniform Rational B-spline Surfaces](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline)
 [Wikipedia - Computer Aided Design (CAD)](https://en.wikipedia.org/wiki/Computer-aided_design)
 [Wikipedia - Rasterization](https://en.wikipedia.org/wiki/Rasterisation)
+[Wikipedia - Euclidean geometry](https://en.wikipedia.org/wiki/Euclidean_geometry)
 [Stackoverflow - Why do 3D engines primarily use triangles to draw surfaces?](https://stackoverflow.com/questions/6100528/why-do-3d-engines-primarily-use-triangles-to-draw-surfaces)
