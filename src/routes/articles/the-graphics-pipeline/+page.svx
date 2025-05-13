@@ -11,28 +11,39 @@ import Tip from "../Tip.svelte"
 
 Ever wondered how games put all that gore on your display? All that beauty is brought into life by
 a process called **rendering**, and at the heart of it, is the **graphics pipeline**.
-In this article we'll dive deep into  the intricate details of this beast.
+In this article we'll dive deep into the intricate details of this powerful beast.
+
+We'll cover all the terminologies needed to understand each stage and have many restatements so don't
+worry if you don't fully grasp something at first. I'll make sure you understand everything at the
+end of our journey. If you still had questions, feel free to contact me :)
+
+So without further ado---
+
+## Overview
 
 Like any pipeline, the **graphics pipeline** is comprised 
 of several **stages**, each of which can be a pipeline in itself or even parallelized.
 Each stage takes some input (data and configuration) to generate some output data for the next stage.
 
-<Note title="A coarse division of the graphics pipeline">
+<Note title="A coarse division of the graphics pipeline", type="diagram">
 
 Application --> Geometry Processing --> Rasterization --> Pixel Processing --> Presentation
 </Note>
 
 Before the heavy rendering work starts on the <Tip text="GPU">Graphics Processing Unit</Tip>,
-we simulate and update the world through systems such as physics engine, game logic, networking, etc.
+we simulate and update the world through **systems** such as physics engine, game logic, networking, etc.
 during the **application** stage.
 This stage is mostly ran on the <Tip text="CPU">Central Processing Unit</Tip>, 
-therefore it is extremely efficient on executing <Tip text="sequentially dependendent logic">
+therefore it is extremely efficient on executing <Tip text="sequentially dependent logic">
 A type of execution flow where the operations depend on the results of previous steps, limiting parallel execution.
 In other words, **CPUs** are great at executing **branch-heavy** code, and **GPUs** are geared
 towards executing a TON of **branch-less** or **branch-light** code in parallel. </Tip>.
 
-The updated scene data is then prepped and fed to the **GPU** for **geometry processing**; which is 
-where we figure out where everything ends up on our screen. We'll cover this stage in depth very soon so don't panic (yet).
+// NOTE: twice  "where..."
+
+The updated scene data is then prepped and fed to the **GPU** for **geometry processing**. Here 
+we figure out where everything ends up on our screen by doing lots of fancy matrix math.
+We'll cover this stage in depth very soon so don't panic (yet).
 
 Afterwards, the final geometric data are converted into <Tip text="pixels"> Pixel is the shorthand for **picture-element**, Voxel is the shorthand for **volumetric-element**. </Tip>
 and prepped for the **pixel processing** stage via a process called **rasterization**.
@@ -40,7 +51,7 @@ In other words, this stage converts a rather abstract and internal presentation 
 into something more concrete (pixels). It's called rasterization because end the product is a <Tip text="raster">Noun. A rectangular pattern of parallel scanning lines followed by the electron beam on a television screen or computer monitor. -- 1930s: from German Raster, literally ‘screen’, from Latin rastrum ‘rake’, from ras- ‘scraped’, from the verb radere. ---Oxford Languages</Tip> of pixels.
 
 The **pixel processing** stage then uses the rasterized geometry data (pixel data) to do **lighting**, **texturing**, 
-and all the sweet gory details of a murder scene. 
+and all the sweet gory details of a scene (like a murder scene). 
 This stage is often, but not always, the most computationally expensive. 
 A huge problem that a good rendering engine needs to solve is how to be **performant**. And a great deal
 of **optimization** can be done through **culling** the work that we can deem unnecessary/redundant in each
@@ -61,9 +72,9 @@ Ever been jump-scared by this sight in an <Tip text="FPS">First Person (Shooter)
 /> 
 
 
-In order to display a scene (like a murder scene), 
+In order to display a (murder) scene, 
 we need to have a way of **representing** the **surface** of its composing objects (like corpses) in computer memory.
-We only care about the **surface** since we won't be seeing the insides anyway---Not that we want to.
+We only care about the **surface** since we won't be seeing the insides anyway---Not with that attitude.
 At this stage, we only care about the **shape** or the **geometry** of the **surface**.
 Texturing, lighting, and all the sweet gory details come at a much later stage once all the **geometry** has been processed.
 
@@ -128,16 +139,20 @@ Also, it is a common practice in computer science to break down hard problems in
 This will be a lot more convincing when we cover the **rasterization** stage :)
 
 
-Bonus point: present-day **hardware** and **algorithms** have become **extremely efficient** at processing 
-triangles (sorting, rendering, etc) after eons of evolving around them.
+<Note title="Bonus point: evolution", type="info">
+
+present-day **hardware** and **algorithms** have become **extremely efficient** at processing 
+triangles by doing operations such as sorting, rasterizing, etc, after eons of evolving around them.
+
+</Note>
 
 ## Primitive Topology
-So, we got our set of vertices, but having a bunch of points floating around wouldn't be so
-interesting, we need to form **triangles** out of them, or more specifically, **triangle strips**.
+So, we got our set of vertices, but having a bunch of points floating around wouldn't make a scene very lively
+(or even deadly), we need to form **triangles** out of them to compose **models**.
 
 We communicate to the computer what type of primitives we want to generate from our vertices by
 configuring the **primitive topology** of the **input assembler**.
-We'll get into the **input assembler** in a second, but what is a **primitive toplogy**?
+We'll get into the **input assembler** bit in a second, but what is a **primitive toplogy**?
 
 <Tip text="Toplogy">The way in which constituent parts are interrelated or arranged.--mid 19th century: via German from Greek topos ‘place’ + -logy.---Oxford Languages</Tip>
 basically defines the way we connect our vertices together, it would be more clear to provide examples than drown you in theory.
@@ -145,16 +160,22 @@ basically defines the way we connect our vertices together, it would be more cle
 As stated previously, we got 3 main types of primitives, **triangles**, **lines**, and **dots**. 
 (There's also a **patch primitive** which we won't get into for now). Let's quickly run through all
 the possible ways we can make these 3 types of primitives alongside some visual cues.
+
+In the following equations, **p** stands for **primitive** and **v** stands for **vertex**.
 	
 **Point list**:
 
 When the topology is **point list**, each consecutive vertex defines a single point primitive, according to the equation:
 
+
+<Note title="Point list equation", type="math">
+
 ```math
-    p_i = \{ v_i \}
+p_i = \{ v_{2i},\ v_{2i+1} \} \\
+n_p = \left\lfloor \frac{n_v}{2} \right\rfloor
 ```
 
-As there is only one vertex, that vertex is the provoking vertex. The number of primitives generated is equal to vertexCount.
+</Note>
 
 **Line list**:
 
@@ -223,10 +244,10 @@ which processes the data we feed to it based on the configurations we set on it.
 The **vertices** and **indices** are provided to this stage via something we call buffers.
 So technically we have to provide  **two** buffers here, a **vertex buffer** and a **index buffer**.
 
-To give you yet-another ovreview, this is the diagram of the "Geometry Processing" section of 
+To give you yet-another ovreview, this is the diagram of the **geometry processing** section of 
 our pipeline:
 
-<Note title="Geometry Processing Pipeline">
+<Note title="Geometry Processing Pipeline", type="diagram">
 
 Draw --> Input Assembler -> Vertex Shader -> Tessellation Control Shader -> Tessellation Primitive Generator -> Tessellation Evaluation Shader -> Geometry Shader -> Vertex Post-Processing -> ... Rasterization ...
 </Note>
@@ -259,17 +280,41 @@ Draw --> Input Assembler -> Vertex Shader -> Tessellation Control Shader -> Tess
 ## Conclusion
 
 ## Sources
-[Tomas Akenine Moller - Real-Time Rendering 4th Edition](https://www.realtimerendering.com/intro.html)
 
-<br/>
+<Note title="Reviewers", type="review">
 
-[LearnOpenGL - Hello Triangle](https://learnopengl.com/Getting-started/Hello-Triangle)
-[LearnOpenGL - Face Culling](https://learnopengl.com/Advanced-OpenGL/Face-culling)
-[Wikipedia - Polygonal Modeling](https://en.wikipedia.org/wiki/Polygonal_modeling)
-[Wikipedia - Non-uniform Rational B-spline Surfaces](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline)
-[Wikipedia - Computer Aided Design (CAD)](https://en.wikipedia.org/wiki/Computer-aided_design)
-[Wikipedia - Rasterization](https://en.wikipedia.org/wiki/Rasterisation)
-[Wikipedia - Euclidean geometry](https://en.wikipedia.org/wiki/Euclidean_geometry)
-[Stackoverflow - Why do 3D engines primarily use triangles to draw surfaces?](https://stackoverflow.com/questions/6100528/why-do-3d-engines-primarily-use-triangles-to-draw-surfaces)
-[Vulkan Docs - Drawing](https://docs.vulkan.org/spec/latest/chapters/drawing.html)
-[Vulkan Docs - Pipeline Diagram](https://docs.vulkan.org/spec/latest/_images/pipelinemesh.svg)
+Mohammad Reza Nemati
+</Note>
+
+<Note title="Books", type="resource">
+
+[Tomas Akenine Moller --- Real-Time Rendering 4th Edition](https://www.realtimerendering.com/intro.html)
+[JoeyDeVriez --- LearnOpenGL - Hello Triangle](https://learnopengl.com/Getting-started/Hello-Triangle)
+[JoeyDeVriez --- LearnOpenGL - Face Culling](https://learnopengl.com/Advanced-OpenGL/Face-culling)
+</Note>
+
+<Note title="Wikipedia", type="resource">
+
+[Polygonal Modeling](https://en.wikipedia.org/wiki/Polygonal_modeling)
+[Non-uniform Rational B-spline Surfaces](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline)
+[Computer Aided Design (CAD)](https://en.wikipedia.org/wiki/Computer-aided_design)
+[Rasterization](https://en.wikipedia.org/wiki/Rasterisation)
+[Euclidean geometry](https://en.wikipedia.org/wiki/Euclidean_geometry)
+</Note>
+
+<Note title="Youtube", type="resource">
+
+...
+
+</Note>
+
+<Note title="Stackoverflow", type="resource">
+
+[Why do 3D engines primarily use triangles to draw surfaces?](https://stackoverflow.com/questions/6100528/why-do-3d-engines-primarily-use-triangles-to-draw-surfaces)
+</Note>
+
+<Note title="Vulakn Docs", type="resource">
+
+[Drawing](https://docs.vulkan.org/spec/latest/chapters/drawing.html)
+[Pipeline Diagram](https://docs.vulkan.org/spec/latest/_images/pipelinemesh.svg)
+</Note>

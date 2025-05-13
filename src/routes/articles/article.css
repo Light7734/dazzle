@@ -1,38 +1,52 @@
 * {
-    color: #ebdbb2;
-    font-family: 'Inter';
-    font-optical-sizing: auto;
-    font-weight: 400;
-    font-style: normal;
+	color: #ebdbb2;
+	font-family: 'Inter';
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
 }
 
 strong {
-    font-weight: 600;
-    font-style: italic;
-    color: #fabd2f;
+	font-weight: 600;
+	font-style: italic;
+	color: #fabd2f;
+}
+
+strong:hover {
+	color: #fe8019;
 }
 
 h1 {
-    display: block;
-    font-size: 2em;
-    margin-top: 0.0em;
-    margin-bottom: 0.0em;
-    margin-left: 0;
-    margin-right: 0;
-    font-weight: bold;
+	display: block;
+	font-size: 2em;
+	margin-top: 0em;
+	margin-bottom: 0em;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
 }
 
 h2 {
-    display: block;
-    font-size: 1.5em;
-    margin-top: 0.83em;
-    margin-bottom: 0.0em;
-    margin-left: 0;
-    margin-right: 0;
-    font-weight: bold;
+	display: block;
+	font-size: 1.5em;
+	margin-top: 0.83em;
+	margin-bottom: 0em;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+}
+
+a {
+	display: block;
+	text-decoration: none;
+	color: #83a598;
+}
+
+a:hover {
+	color: #458588;
 }
 
 .katex {
-    width: max-content;
-    margin-left: 0;
+	width: max-content;
+	margin-left: 0;
 }

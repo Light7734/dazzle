@@ -15,7 +15,7 @@
         font-weight: 600;
         font-style: italic;
         color: #fabd2f;
-        border-bottom: .5px solid #d79921;
+        border-bottom: 1px solid #fe8019;
 	}
 
 	/* Tooltip text */
@@ -32,7 +32,7 @@
 		text-align: justify;
         padding: 1em;
 		border-radius: 6px;
-        border: 1px solid #928374;
+        border: 1px dotted #fe8019;
 
 		top: 100%;
 		left: 50%;
@@ -46,4 +46,8 @@
 	.tooltip:hover .tooltiptext {
 		visibility: visible;
 	}
+
+    .tooltip:hover {
+        color: #fe8019;
+    }
 </style>

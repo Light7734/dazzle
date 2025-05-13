@@ -1,19 +1,50 @@
 <script lang="ts">
-	import { Info } from '@lucide/svelte';
-	export let title;
+	import { Info, BookCopy, Eye, Network, Sigma } from '@lucide/svelte';
+	let { title, type = 'info' } = $props();
 </script>
 
 <div class="note">
 	<div class="head">
 		<div class="icon">
-			<Info />
+			{#if type == 'info'}
+				<Info />
+			{:else if type == 'diagram'}
+				<Network />
+			{:else if type == 'math'}
+				<Sigma />
+			{:else if type == 'review'}
+				<Eye />
+			{:else if type == 'resource'}
+				<BookCopy />
+			{/if}
 		</div>
 
-		<div class="horiz_line"></div>
+		{#if type == 'info'}
+			<div class="horiz_line" style:background-color="#8ec07c"></div>
+		{:else if type == 'diagram'}
+			<div class="horiz_line" style:background-color="#d3869b"></div>
+		{:else if type == 'math'}
+			<div class="horiz_line" style:background-color="#fe8019"></div>
+		{:else if type == 'review'}
+			<div class="horiz_line" style:background-color="#cc241d"></div>
+		{:else if type == 'resource'}
+			<div class="horiz_line" style:background-color="#458588"></div>
+		{/if}
 	</div>
 
 	<div class="content">
-		<div class="line"></div>
+		{#if type == 'info'}
+			<div class="line" style:background-color="#8ec07c"></div>
+		{:else if type == 'diagram'}
+			<div class="line" style:background-color="#d3869b"></div>
+		{:else if type == 'math'}
+			<div class="line" style:background-color="#fe8019"></div>
+		{:else if type == 'review'}
+			<div class="line" style:background-color="#cc241d"></div>
+		{:else if type == 'resource'}
+			<div class="line" style:background-color="#458588"></div>
+		{/if}
+
 		<div class="slot">
 			<p>{title}</p>
 			<slot />
@@ -46,7 +77,6 @@
 	}
 
 	.line {
-		background-color: #8ec07c;
 		width: 0.1em;
 		margin-left: 0.85em;
 		margin-bottom: 1em;
@@ -54,7 +84,6 @@
 	}
 
 	.horiz_line {
-		background-color: #8ec07c;
 		height: 0.1em;
 		margin-left: 0.5em;
 
@@ -73,7 +102,7 @@
 		font-family: 'IBM Plex Mono', monospace;
 		display: inline-block;
 		margin: 0;
-        font-weight: bolder;
+		font-weight: bolder;
 	}
 
 	.icon {
