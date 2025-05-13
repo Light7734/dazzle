@@ -24,7 +24,7 @@ Application --> Geometry Processing --> Rasterization --> Pixel Processing --> P
 
 Before the heavy rendering work starts on the <Tip text="GPU">Graphics Processing Unit</Tip>,
 we simulate and update the world through systems such as physics engine, game logic, networking, etc.
-during the **Application** stage.
+during the **application** stage.
 This stage is mostly ran on the <Tip text="CPU">Central Processing Unit</Tip>, 
 therefore it is extremely efficient on executing <Tip text="sequentially dependendent logic">
 A type of execution flow where the operations depend on the results of previous steps, limiting parallel execution.
@@ -131,15 +131,106 @@ This will be a lot more convincing when we cover the **rasterization** stage :)
 Bonus point: present-day **hardware** and **algorithms** have become **extremely efficient** at processing 
 triangles (sorting, rendering, etc) after eons of evolving around them.
 
-
 ## Primitive Topology
-So, we got our set of triangles, but how do we make a model out of them?
+So, we got our set of vertices, but having a bunch of points floating around wouldn't be so
+interesting, we need to form **triangles** out of them, or more specifically, **triangle strips**.
 
+We communicate to the computer what type of primitives we want to generate from our vertices by
+configuring the **primitive topology** of the **input assembler**.
+We'll get into the **input assembler** in a second, but what is a **primitive toplogy**?
 
+<Tip text="Toplogy">The way in which constituent parts are interrelated or arranged.--mid 19th century: via German from Greek topos ‘place’ + -logy.---Oxford Languages</Tip>
+basically defines the way we connect our vertices together, it would be more clear to provide examples than drown you in theory.
+
+As stated previously, we got 3 main types of primitives, **triangles**, **lines**, and **dots**. 
+(There's also a **patch primitive** which we won't get into for now). Let's quickly run through all
+the possible ways we can make these 3 types of primitives alongside some visual cues.
+	
+**Point list**:
+
+When the topology is **point list**, each consecutive vertex defines a single point primitive, according to the equation:
+
+```math
+    p_i = \{ v_i \}
+```
+
+As there is only one vertex, that vertex is the provoking vertex. The number of primitives generated is equal to vertexCount.
+
+**Line list**:
+
+When the primitive topology is **line list**, each consecutive pair of vertices defines a single **line** primitive, according to the equation:
+
+```math
+p_i = \{ v_{2i},\ v_{2i+1} \}
+```
+The number of primitives generated is equal to ⌊vertex_count / 2⌋.
+
+**Line Strip**:
+
+When the primitive topology is **line strip**, one line primitive is defined by each vertex and the following vertex, according to the equation:
+
+```math
+    p_i = \{ v_i, v_{i+1} \}
+```
+The number of primitives generated is equal to max(0, vertex_count - 1).
+
+**Triangle list**:
+
+When the primitive topology is **triangle list, each consecutive set of three vertices defines a single triangle primitive, according to the equation:
+```math
+    p_i = \{ v_{3i}, v_{3i+1}, v_{3i+2} \}
+```
+
+The number of primitives generated is equal to ⌊vertex_count / 3⌋.
+
+**Triangle strip**:
+
+When the primitive topology is **triangle strip**, one triangle primitive is defined by each vertex and the two vertices that follow it, according to the equation:
+
+```math
+    p_i = \{ v_i,\ v_{i + (1 + i \bmod 2)},\ v_{i + (2 - i \bmod 2)} \}
+```
+
+The number of primitives generated is equal to max(0, vertex_count - 2).
+
+**Triangle fan**:
+
+When the primitive topology is **trinagle fan**, triangle primitives are defined around a shared common vertex, according to the equation:
+
+```math
+    p_i = \{ v_{i+1}, v_{i+2}, v_0 \}
+```
+
+The number of primitives generated is equal to max(0, vertex_count - 2).
+
+There's also line/triangle list/strip with **adjacency** and as mentioed before **patch list**,
+but for the sake of brevity we won't get into them.
+
+<Image 
+    paths={["/images/point_list.png"]} 
+/> 
 
 ## Indices
+Great, we got our vertices, we figured out how to connect them, but there's one last thing we need
+to understand before we can **assemble** our input using the **input assembler**. The **indices**.
 
-## Input Assembler
+
+## **Input Assembler**
+Every section before this explained terminologies needed to grasp this,
+section colored in yell-ow are concrete pipeline stages where some code gets executed
+which processes the data we feed to it based on the configurations we set on it.
+
+The **vertices** and **indices** are provided to this stage via something we call buffers.
+So technically we have to provide  **two** buffers here, a **vertex buffer** and a **index buffer**.
+
+To give you yet-another ovreview, this is the diagram of the "Geometry Processing" section of 
+our pipeline:
+
+<Note title="Geometry Processing Pipeline">
+
+Draw --> Input Assembler -> Vertex Shader -> Tessellation Control Shader -> Tessellation Primitive Generator -> Tessellation Evaluation Shader -> Geometry Shader -> Vertex Post-Processing -> ... Rasterization ...
+</Note>
+
 
 ## Coordinate System -- Local Space
 
@@ -180,3 +271,5 @@ So, we got our set of triangles, but how do we make a model out of them?
 [Wikipedia - Rasterization](https://en.wikipedia.org/wiki/Rasterisation)
 [Wikipedia - Euclidean geometry](https://en.wikipedia.org/wiki/Euclidean_geometry)
 [Stackoverflow - Why do 3D engines primarily use triangles to draw surfaces?](https://stackoverflow.com/questions/6100528/why-do-3d-engines-primarily-use-triangles-to-draw-surfaces)
+[Vulkan Docs - Drawing](https://docs.vulkan.org/spec/latest/chapters/drawing.html)
+[Vulkan Docs - Pipeline Diagram](https://docs.vulkan.org/spec/latest/_images/pipelinemesh.svg)
