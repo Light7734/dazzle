@@ -14,8 +14,7 @@ a process called **rendering**, and at the heart of it, is the **graphics pipeli
 In this article we'll dive deep into the intricate details of this powerful beast.
 
 We'll cover all the terminologies needed to understand each stage and have many restatements so don't
-worry if you don't fully grasp something at first. I'll make sure you understand everything at the
-end of our journey. If you still had questions, feel free to contact me :)
+worry if you don't fully grasp something at first. If you still had questions, feel free to contact me :)
 
 So without further ado---
 
@@ -38,8 +37,6 @@ therefore it is extremely efficient on executing <Tip text="sequentially depende
 A type of execution flow where the operations depend on the results of previous steps, limiting parallel execution.
 In other words, **CPUs** are great at executing **branch-heavy** code, and **GPUs** are geared
 towards executing a TON of **branch-less** or **branch-light** code in parallel. </Tip>.
-
-// NOTE: twice  "where..."
 
 The updated scene data is then prepped and fed to the **GPU** for **geometry processing**. Here 
 we figure out where everything ends up on our screen by doing lots of fancy matrix math.
@@ -115,7 +112,7 @@ is a **triangle**. But why not squares or polygons with a variable number of edg
 
 ## Why Triangles?
 
-In <Tip text="Euclidean geometry"> Developed by **Euclid** around 300 BCE, is based on five axioms, including the parallel postulate. It describes properties of shapes, angles, and space using deductive reasoning. It remained the standard model of geometry for centuries until non-Euclidean geometries and general relativity showed its limits. It's still widely used in education, engineering, and **computer graphics**. ---Wikipedia </Tip>, triangles are always **planar** (they exist only in one plane), 
+In <Tip text="Euclidean geometry"> Developed by **Euclid** around 300 BCE, is based on five axioms. It describes properties of shapes, angles, and space using deductive reasoning. It remained the standard model of geometry for centuries until non-Euclidean geometries and general relativity showed its limits. It's still widely used in education, engineering, and **computer graphics**. ---Wikipedia </Tip>, triangles are always **planar** (they exist only in one plane), 
 any polygon composed of more than 3 points may break this rule, but why does polygons residing in one plane so important 
 to us?
 
@@ -148,88 +145,100 @@ triangles by doing operations such as sorting, rasterizing, etc, after eons of e
 
 ## Primitive Topology
 So, we got our set of vertices, but having a bunch of points floating around wouldn't make a scene very lively
-(or even deadly), we need to form **triangles** out of them to compose **models**.
+(or gory), we need to form **triangles** out of them to compose **models** (corpse xd).
 
-We communicate to the computer what type of primitives we want to generate from our vertices by
+We communicate to the computer the <Tip text="toplogy"> The way in which constituent parts are interrelated or arranged.--mid 19th century: via German from Greek topos ‘place’ + -logy.---Oxford Languages </Tip>
+of the primitives to be generated from our set of vertices by
 configuring the **primitive topology** of the **input assembler**.
-We'll get into the **input assembler** bit in a second, but what is a **primitive toplogy**?
+We'll get into the **input assembler** bit in a second, but let's clarify the topology with some examples.
 
-<Tip text="Toplogy">The way in which constituent parts are interrelated or arranged.--mid 19th century: via German from Greek topos ‘place’ + -logy.---Oxford Languages</Tip>
-basically defines the way we connect our vertices together, it would be more clear to provide examples than drown you in theory.
-
-As stated previously, we got 3 main types of primitives, **triangles**, **lines**, and **dots**. 
-(There's also a **patch primitive** which we won't get into for now). Let's quickly run through all
-the possible ways we can make these 3 types of primitives alongside some visual cues.
-
-In the following equations, **p** stands for **primitive** and **v** stands for **vertex**.
-	
 **Point list**:
 
-When the topology is **point list**, each consecutive vertex defines a single point primitive, according to the equation:
-
-
-<Note title="Point list equation", type="math">
+When the topology is point list, each **consecutive vertex** defines a **single point** primitive, according to the equation:
+<Note title="equation", type="math">
 
 ```math
-p_i = \{ v_{2i},\ v_{2i+1} \} \\
-n_p = \left\lfloor \frac{n_v}{2} \right\rfloor
+p_i = \{ v_{i} \}
 ```
 
 </Note>
 
 **Line list**:
 
-When the primitive topology is **line list**, each consecutive pair of vertices defines a single **line** primitive, according to the equation:
+When the primitive topology is line list, each **consecutive pair of vertices** defines a **single line**, according to the equation:
+
+<Note title="equation", type="math">
 
 ```math
 p_i = \{ v_{2i},\ v_{2i+1} \}
 ```
+
+</Note>
+
 The number of primitives generated is equal to ⌊vertex_count / 2⌋.
 
 **Line Strip**:
 
-When the primitive topology is **line strip**, one line primitive is defined by each vertex and the following vertex, according to the equation:
+When the primitive topology is line strip, **one line** is defined by each **vertex and the following vertex**, according to the equation:
+
+<Note title="equation", type="math">
 
 ```math
     p_i = \{ v_i, v_{i+1} \}
 ```
+
+</Note>
+
 The number of primitives generated is equal to max(0, vertex_count - 1).
 
 **Triangle list**:
 
-When the primitive topology is **triangle list, each consecutive set of three vertices defines a single triangle primitive, according to the equation:
+When the primitive topology is triangle list, each **consecutive set of three vertices** defines a **single triangle**, according to the equation:
+<Note title="equation", type="math">
+
 ```math
     p_i = \{ v_{3i}, v_{3i+1}, v_{3i+2} \}
 ```
+
+</Note>
+
 
 The number of primitives generated is equal to ⌊vertex_count / 3⌋.
 
 **Triangle strip**:
 
-When the primitive topology is **triangle strip**, one triangle primitive is defined by each vertex and the two vertices that follow it, according to the equation:
+When the primitive topology is triangle strip, **one triangle** is defined by each **vertex and the two vertices that follow it**, according to the equation:
+
+<Note title="equation", type="math">
 
 ```math
     p_i = \{ v_i,\ v_{i + (1 + i \bmod 2)},\ v_{i + (2 - i \bmod 2)} \}
 ```
 
+</Note>
+
+
 The number of primitives generated is equal to max(0, vertex_count - 2).
 
 **Triangle fan**:
 
-When the primitive topology is **trinagle fan**, triangle primitives are defined around a shared common vertex, according to the equation:
+When the primitive topology is trinagle fan, triangleas are defined **around a shared common vertex**, according to the equation:
+
+<Note title="equation", type="math">
 
 ```math
     p_i = \{ v_{i+1}, v_{i+2}, v_0 \}
 ```
 
+</Note>
+
+
 The number of primitives generated is equal to max(0, vertex_count - 2).
 
-There's also line/triangle list/strip with **adjacency** and as mentioed before **patch list**,
-but for the sake of brevity we won't get into them.
+There's also some topologies suffixed with the word **adjacency**, and a special type of primitive called **patch** primitive.
+But for the sake of simplicity we won't get into them.
 
-<Image 
-    paths={["/images/point_list.png"]} 
-/> 
+So what's next?
 
 ## Indices
 Great, we got our vertices, we figured out how to connect them, but there's one last thing we need
