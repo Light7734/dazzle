@@ -33,10 +33,11 @@
 		min-width: 80ch;
 		max-width: 80ch;
 		text-wrap-mode: wrap;
+		text-wrap-style: pretty;
 		text-align: justify;
 
-		border-left: 1px solid #928374;
-		border-right: 1px solid #928374;
+		border-left: 1px solid #92837420;
+		border-right: 1px solid #92837420;
 	}
 
 	.padding {

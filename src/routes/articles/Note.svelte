@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Info, BookCopy, Eye, Network, Sigma } from '@lucide/svelte';
-	let { title, type = 'info' } = $props();
+	import { Info, BookCopy, Eye, Network, Sigma, Image } from '@lucide/svelte';
+	let { title = '', type = 'info' } = $props();
 </script>
 
 <div class="note">
@@ -8,6 +8,8 @@
 		<div class="icon">
 			{#if type == 'info'}
 				<Info />
+			{:else if type == 'image'}
+				<Image />
 			{:else if type == 'diagram'}
 				<Network />
 			{:else if type == 'math'}
@@ -23,6 +25,8 @@
 			<div class="horiz_line" style:background-color="#8ec07c"></div>
 		{:else if type == 'diagram'}
 			<div class="horiz_line" style:background-color="#d3869b"></div>
+		{:else if type == 'image'}
+			<div class="horiz_line" style:background-color="#d3869b"></div>
 		{:else if type == 'math'}
 			<div class="horiz_line" style:background-color="#fe8019"></div>
 		{:else if type == 'review'}
@@ -37,6 +41,8 @@
 			<div class="line" style:background-color="#8ec07c"></div>
 		{:else if type == 'diagram'}
 			<div class="line" style:background-color="#d3869b"></div>
+		{:else if type == 'image'}
+			<div class="line" style:background-color="#d3869b"></div>
 		{:else if type == 'math'}
 			<div class="line" style:background-color="#fe8019"></div>
 		{:else if type == 'review'}
@@ -46,7 +52,9 @@
 		{/if}
 
 		<div class="slot">
-			<p>{title}</p>
+			{#if title != ''}
+				<p class="title">{title}</p>
+			{/if}
 			<slot />
 		</div>
 	</div>
@@ -54,6 +62,9 @@
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+    .title {
+    }
 
 	.note {
 		display: block;

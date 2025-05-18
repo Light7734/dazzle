@@ -64,14 +64,18 @@ stage and have a recap afterwards!
 
 Ever been jump-scared by this sight in an <Tip text="FPS">First Person (Shooter) perspective</Tip>? Why are (the inside of) things rendered like that?
 
+<Note title="Boo!", type="image">
+
 <Image 
     paths={["/images/boo.png"]} 
 /> 
 
+</Note>
+
 
 In order to display a (murder) scene, 
 we need to have a way of **representing** the **surface** of its composing objects (like corpses) in computer memory.
-We only care about the **surface** since we won't be seeing the insides anyway---Not with that attitude.
+We only care about the **surface** since we won't be seeing the insides anyway---Not that we want to.
 At this stage, we only care about the **shape** or the **geometry** of the **surface**.
 Texturing, lighting, and all the sweet gory details come at a much later stage once all the **geometry** has been processed.
 
@@ -94,18 +98,26 @@ hundreds of thousands of objects (like a lot of corpses) in under a small fracti
 We can achieve this approximation using a collection of **triangles**, **lines**, and **dots** (primitives),
 which themselves are composed of a series of **vertices** (points in space).
 
+<Note title="A sphere made out of triangles", type="image">
+
 <Image 
     paths={["/images/polygon_sphere.webp"]} 
 /> 
+
+</Note>
 
 A **vertex** is simply a point in space.
 Once we get enough of these **points**, we can connect them to form **primitives** such as **triangles**, **lines**, and **dots**.
 And once we connect enough of these **primitives** together, they form a **model** or a **mesh** (that we need for our corpse).
 With some interesting models put together, we can compose a **scene** (like a murder scene :D).
 
+<Note title="Stanford bunny model in increasing level of detail (LoD)", type="image">
+
 <Image 
     paths={["/images/bunny.jpg"]} 
 /> 
+
+</Note>
 
 But let's not get ahead of ourselves. The primary type of **primitive** that we care about during **polygonal modeling**
 is a **triangle**. But why not squares or polygons with a variable number of edges?
@@ -116,9 +128,13 @@ In <Tip text="Euclidean geometry"> Developed by **Euclid** around 300 BCE, is ba
 any polygon composed of more than 3 points may break this rule, but why does polygons residing in one plane so important 
 to us?
 
+<Note title="Planar vs Non-Planar polygons" type="image">
+
 <Image 
     paths={["/images/planar.jpg", "/images/non_planar_1.jpg", "/images/non_planar_2.png"]} 
 /> 
+
+</Note>
 
 When a polygon exists only in one plane, we can safely imply that **only one face** of it can be visible
 at any one time; this enables us to utilize a huge optimization technique called **back-face culling**.
@@ -136,7 +152,7 @@ Also, it is a common practice in computer science to break down hard problems in
 This will be a lot more convincing when we cover the **rasterization** stage :)
 
 
-<Note title="Bonus point: evolution", type="info">
+<Note title="Bonus point, evolution", type="info">
 
 present-day **hardware** and **algorithms** have become **extremely efficient** at processing 
 triangles by doing operations such as sorting, rasterizing, etc, after eons of evolving around them.
@@ -152,98 +168,133 @@ of the primitives to be generated from our set of vertices by
 configuring the **primitive topology** of the **input assembler**.
 We'll get into the **input assembler** bit in a second, but let's clarify the topology with some examples.
 
-**Point list**:
+When the topology is **point list**, each **consecutive vertex** (v) defines a **single point** primitive (p)
+and the number of primitives (n_p) is equals to the number of vertices (n_v).
 
-When the topology is point list, each **consecutive vertex** defines a **single point** primitive, according to the equation:
-<Note title="equation", type="math">
+<Note title="", type="image">
+
+<Image 
+    paths={["/images/primitive_topology_point_list.svg"]} 
+/> 
+
+</Note>
+
+<Note type="math">
 
 ```math
-p_i = \{ v_{i} \}
+\begin{aligned}
+&p_i = \{ v_{i} \} \\ &n_p = n_v
+\end{aligned}
 ```
 
 </Note>
 
-**Line list**:
+When the topology is **line list**, each **consecutive pair of vertices** defines a **single line**
 
-When the primitive topology is line list, each **consecutive pair of vertices** defines a **single line**, according to the equation:
+<Note title="", type="image">
 
-<Note title="equation", type="math">
-
-```math
-p_i = \{ v_{2i},\ v_{2i+1} \}
-```
+<Image 
+    paths={["/images/primitive_topology_line_list.svg"]} 
+/> 
 
 </Note>
 
-The number of primitives generated is equal to ⌊vertex_count / 2⌋.
+<Note  type="math">
 
-**Line Strip**:
+```math
+\begin{aligned}
+&p_i = \{ v_{2i},\ v_{2i+1} \} \\ &n_p = ⌊ n_v / 2 ⌋
+\end{aligned}
+```
+
+</Note>
 
 When the primitive topology is line strip, **one line** is defined by each **vertex and the following vertex**, according to the equation:
 
-<Note title="equation", type="math">
+<Note title="", type="image">
 
-```math
-    p_i = \{ v_i, v_{i+1} \}
-```
+<Image 
+    paths={["/images/primitive_topology_line_strip.svg"]} 
+/> 
 
 </Note>
 
-The number of primitives generated is equal to max(0, vertex_count - 1).
 
-**Triangle list**:
+<Note  type="math">
+
+```math
+\begin{aligned}
+    &p_i = \{ v_i, v_{i+1} \} \\ &n_p = \text{max}(0, n_v - 1)
+\end{aligned}
+```
+
+</Note>
 
 When the primitive topology is triangle list, each **consecutive set of three vertices** defines a **single triangle**, according to the equation:
-<Note title="equation", type="math">
 
-```math
-    p_i = \{ v_{3i}, v_{3i+1}, v_{3i+2} \}
-```
+<Note title="", type="image">
+
+<Image 
+    paths={["/images/primitive_topology_triangle_list.svg"]} 
+/> 
 
 </Note>
 
+<Note  type="math">
 
-The number of primitives generated is equal to ⌊vertex_count / 3⌋.
+```math
+\begin{aligned}
+    &p_i = \{ v_{3i}, v_{3i+1}, v_{3i+2} \} \\ &n_p = ⌊n_v / 3⌋
+\end{aligned}
+```
 
-**Triangle strip**:
+</Note>
 
 When the primitive topology is triangle strip, **one triangle** is defined by each **vertex and the two vertices that follow it**, according to the equation:
 
-<Note title="equation", type="math">
+<Note title="", type="image">
+
+<Image 
+    paths={["/images/primitive_topology_triangle_strip.svg"]} 
+/> 
+
+</Note>
+
+<Note  type="math">
 
 ```math
-    p_i = \{ v_i,\ v_{i + (1 + i \bmod 2)},\ v_{i + (2 - i \bmod 2)} \}
+\begin{aligned}
+    &p_i = \{ v_i,\ v_{i + (1 + i \bmod 2)},\ v_{i + (2 - i \bmod 2)} \} \\ &n_p = \text{max}(0,  n_v- 2)
+\end{aligned}
 ```
 
 </Note>
 
-
-The number of primitives generated is equal to max(0, vertex_count - 2).
-
-**Triangle fan**:
 
 When the primitive topology is trinagle fan, triangleas are defined **around a shared common vertex**, according to the equation:
 
-<Note title="equation", type="math">
+<Note title="", type="image">
+
+<Image 
+    paths={["/images/primitive_topology_triangle_fan.svg"]} 
+/> 
+
+</Note>
+
+<Note type="math">
 
 ```math
-    p_i = \{ v_{i+1}, v_{i+2}, v_0 \}
+\begin{aligned}
+    &p_i = \{ v_{i+1}, v_{i+2}, v_0 \} \\ &n_p = \text{max}(0, n_v - 2)
+\end{aligned}
 ```
 
 </Note>
 
-
-The number of primitives generated is equal to max(0, vertex_count - 2).
-
-There's also some topologies suffixed with the word **adjacency**, and a special type of primitive called **patch** primitive.
-But for the sake of simplicity we won't get into them.
-
-So what's next?
-
 ## Indices
-Great, we got our vertices, we figured out how to connect them, but there's one last thing we need
-to understand before we can **assemble** our input using the **input assembler**. The **indices**.
-
+Indices are an array of integers that reference vertices in a vertex buffer.
+They define the order in which vertices are used to form primitives (triangles, strips, etc.),
+allowing vertex reuse and reducing memory usage. Instead of duplicating vertex data, indices let you build complex geometry efficiently.
 
 ## **Input Assembler**
 Every section before this explained terminologies needed to grasp this,
