@@ -36,7 +36,8 @@ This stage is mostly ran on the <Tip text="CPU">Central Processing Unit</Tip>,
 therefore it is extremely efficient on executing <Tip text="sequentially dependent logic">
 A type of execution flow where the operations depend on the results of previous steps, limiting parallel execution.
 In other words, **CPUs** are great at executing **branch-heavy** code, and **GPUs** are geared
-towards executing a TON of **branch-less** or **branch-light** code in parallel. </Tip>.
+towards executing a TON of **branch-less** or **branch-light** code in parallel---Like executing some
+code for each pixel on your screen, there are a ton of pixels but they mostly do their own independent logic.  </Tip>.
 
 The updated scene data is then prepped and fed to the **GPU** for **geometry processing**. Here 
 we figure out where everything ends up on our screen by doing lots of fancy matrix math.
@@ -52,17 +53,17 @@ and all the sweet gory details of a scene (like a murder scene).
 This stage is often, but not always, the most computationally expensive. 
 A huge problem that a good rendering engine needs to solve is how to be **performant**. And a great deal
 of **optimization** can be done through **culling** the work that we can deem unnecessary/redundant in each
-stage before it's passed on to the next. More on **culling** later don't worry (yet 🙂).
+stage before it's passed on to the next. More on **culling** later so don't worry (yet :D).
 
 The pipeline will then serve (present) the output of the **pixel processing** stage, which is a **rendered image**,
-to your pretty eyes 👁👄👁 using your <Tip text="display">Usually a monitor but the technical term for it is
+to your pretty eyes using your <Tip text="display">Usually a monitor but the technical term for it is
 the target **surface**. Which can be anything like a VR headset or some other crazy surface used for displaying purposes.</Tip>.
 But to avoid drowning you in overviews, let's jump right into the gory details of the **geometry processing**
 stage and have a recap afterwards!
 
 ## Surfaces
 
-Ever been jump-scared by this sight in an <Tip text="FPS">First Person (Shooter) perspective</Tip>? Why are (the inside of) things rendered like that?
+Ever been jump-scared by this sight in an <Tip text="FPS">First person (shooter) perspective</Tip>? Why are (the inside of) things rendered like that?
 
 <Note title="Boo!", type="image">
 
@@ -312,28 +313,214 @@ our pipeline:
 Draw --> Input Assembler -> Vertex Shader -> Tessellation Control Shader -> Tessellation Primitive Generator -> Tessellation Evaluation Shader -> Geometry Shader -> Vertex Post-Processing -> ... Rasterization ...
 </Note>
 
+## Coordinate System -- Overview
+We got our surface representation (vertices), we got our indices, we set the primitive topology type, and we gave these
+to the **input assembler** to spit out triangles for us.
+
+**Assembling primitives** is the **first** essential task in the **geometry processing** stage, and 
+everything you read so far only went over that part.
+Its **second** vital responsibility is the **transformation** of the said primitives. Let me explain.
+
+So far, all the examples show the geometry in NDC (Normalized Device Coordinates). 
+This is because the **rasterizer** expects the final vertex coordinates to be in the NDC range.
+Anything outside of this range is **clipped** henceforth not visible.
+
+Yet, as you'll understand after this section, doing everything in the **NDC** is inconvenient and very limiting.
+What we'd like to do is to transform these vertices through 5 different coordinate systems before ending up in NDC
+(or outside of if they're meant to be clipped).
+The purpose of each space will be explained shortly. But doing these **transformations** require
+a lot of **linear algebra**, specifically **matrix operations**.
+
+I'll give you a brief refresher on the mathematics needed to understand the coordinate systems.
+But if you feel extra savvy you may skip the following **linear algebra** sections.
+
+<Note title="Algebra  Ahead!">
+
+The concepts in the following sections may be difficult to grasp at first. And **that's okay**, you don't
+need to pickup everything the first time you read them. If you feel passionate about these topics
+and want to have a better grasp, refer to the references at the bottom of this article.
+
+</Note>
+
+## Linear Algebra --- Vector Operations
+
+** What is a vector**
+
+**Additions and Subtraction**
+
+**Division and Multiplication**
+
+**Scalar Operations**
+
+**Cross Product**
+
+**Dot Product**
+
+**Length**
+
+**Normalization and the normal vector**
+
+## Linear Algebra --- Matrix Operations
+
+** What is a matrix**
+
+**Addition and Subtraction**
+
+**Scalar Operations**
+
+**Multiplication**
+
+**Division (or lack there of)**
+
+**Identity Matrix**
+
+## Linear Algebra --- Affine Transformations
+
+All **affine** transformations can be represented as matrix operations using **homogeneous** coordinates.
+
+**What is transformation**
+
+**Scale**
+
+**Translation**
+
+**Rotation**
+
+**Embedding it all in one matrix**
+
+Great! You've refreshed on lots of cool mathematics today, let's get back to the original discussion.
+**Transforming** the freshly generated **primitives** through the **five** primary coordinates systems (or spaces),
+starting with the **local space**!
 
 ## Coordinate System -- Local Space
+Alternatively called the **object space**, is the space **relative** to your object's **origin**.
+All objects have an origin, and it's probably at coordinates [0, 0, 0] (not guaranteed).
+
+Think of a modelling application like **Blender**. If you create a cube in it and export it, the 
+**vertices** it outputs is probably something like this:
+
+**insert outputted vertices**.
+
+And the cube looks plain like this:
+
+<Note title="Unit cube", type="image">
+
+</Note>
+
+I hope this one is easy to grasp since **technically** been using it in our initial triangle
+and square examples already, the local space just happened to be in NDC though that is not necessary.
+
+Say if we arbitrarily consider each 1 unit is 1cm, then a 10m x 10m cube would have the following 
+vertices whilst in the local space.
+
+Basically the vertices that are read from a model file is initially in local space.
 
 ## Coordinate System -- World Space
+This is the where our first transormation happens. If we were constructing a crime scene
+without world space transformations then all our corpses would reside somewhere in [0, 0, 0] and
+would be inside each other (horrid, or lovely?).
+
+This transformation allows us to **compose** a (game) world, by transforming all the models from
+their local space and scattering them around the world. We can **translate** (move) the model to the desired
+spot, **rotate** it because why not, and **scale** it if the model needs scaling (capitan obvious here).
+
+This transformation is stored in a matrix called the **model matrix**. This is the first of three primary
+**transformation** matrices which gets multiplied by our vertices.
+
+<Note tye="math", title="Model transformation">
+
+```math
+\text{model}_M * \text{local}_V
+```
+
+</Note>
+
+So one down, two more to go!
 
 ## Coordinate system -- View Space
+Alternatively names include: **eye space** or the **camera space**.
+
+This is where the crucial element of **interactivity**
+comes to life (well depends if you can move the view in your game or not).
+
+Currently,  we're looking at the world
+through a fixed lens. Since everything that's rendered will be in the [-1.0, 1.0] range, that means
+**moving** our selves or our **eyes** or the game's **camera** doesn't have a real meaning.
+
+Now it's you that's stuck! (haha). But don't worry your layz-ass, instead of moving yourself
+(which again would not make sense since everything visible ends up in the NDC), you can move the world! (how entitled).
+
+We can achieve this illusion of moving around the world by **reverse transforming** everything based
+on our own **location** and **orientation**. So imagine we're in the [+10.0, 0.0, 0.0] coordinates. How we simulate this
+movement is to apply this translation matrix:
+
+<Note type="math", title="Simplified movement to the right">
+
+baa
+
+</Note>
+
+But don't get over-confident yet, this is the **simple** part of the view matrix that handles only
+the **position**. But in any worthwhile game we need to **look around** too and orient ourselves.
+
+We can **rotate** the camera, or more accurately **reverse-rotate** the world, via 3 unit vectors snuggled
+inside a matrix, the **up** vector (U), the **target** or **direction** vector (D) and the **right**
+vector (R)
+
+
+<Note type="math", title="LookAt matrix">
+
+```math
+ \begin{bmatrix} \color{red}{R_x} & \color{red}{R_y} & \color{red}{R_z} & 0 \\ \color{green}{U_x} & \color{green}{U_y} & \color{green}{U_z} & 0 \\ \color{blue}{D_x} & \color{blue}{D_y} & \color{blue}{D_z} & 0 \\ 0 & 0 & 0  & 1 \end{bmatrix} * \begin{bmatrix} 1 & 0 & 0 & -\color{purple}{P_x} \\ 0 & 1 & 0 & -\color{purple}{P_y} \\ 0 & 0 & 1 & -\color{purple}{P_z} \\ 0 & 0 & 0  & 1 \end{bmatrix}
+```
+
+</Note>
+
+">>>>>" explain in depth why such operation makes the view rotate.
+
+Just like the **world space** transformation which is stored in the **model matrix**. 
+This transformation is stored in anoher matrix called the **view matrix**.
+
+So far we got this equation to apply the **world space** and **view space** transformations
+to the **local space** vertices of our model:
+
+<Note tye="math", title="Model_View transformation">
+
+```math
+\text{model}_M * \text{view}_M * \text{local}_V
+```
+
+</Note>
+
+That's two down, one left to slay!
 
 ## Coordinate system -- Clip Space
+This one is gonna get a little complicated so buckle up :)
+
+">>>>>" need to study more for the rest of the coordinates section, forgot every fucking thing I knew...
 
 ## Coordinate system -- Screen Space
+
+## Coordinate system -- Recap
+
+<Note title="Coordinate System", type="diagram">
+
+</Note>
 
 ## Vertex Shader
 
 ## Tessellation & Geometry Shaders
 
-## Let's Recap!
+## Geometry Processing -- Recap
 
-## Rasterizer
+## Rasterization
+Remember the god forsaken **input assembler**? Let's expand our understanding of it
+since-- for simplicity's sake, we skipped over the fact that **vertices** can hold much, much more data
+than only positions.
 
-## Pixel Shader
+## Pixel Processing
 
-## Output Merger 
+## Output Merger
 
 ## The Future
 
@@ -343,14 +530,18 @@ Draw --> Input Assembler -> Vertex Shader -> Tessellation Control Shader -> Tess
 
 <Note title="Reviewers", type="review">
 
-Mohammad Reza Nemati
+Mohammad-Reza Nemati
+
 </Note>
 
 <Note title="Books", type="resource">
 
-[Tomas Akenine Moller --- Real-Time Rendering 4th Edition](https://www.realtimerendering.com/intro.html)
+[Tomas Akenine Moller --- Real-Time Rendering 4th Edition (referenced multiple times)](https://www.realtimerendering.com/intro.html)
 [JoeyDeVriez --- LearnOpenGL - Hello Triangle](https://learnopengl.com/Getting-started/Hello-Triangle)
 [JoeyDeVriez --- LearnOpenGL - Face Culling](https://learnopengl.com/Advanced-OpenGL/Face-culling)
+[JoeyDeVriez --- LearnOpenGL - Coordinate Systems](https://learnopengl.com/Getting-started/Coordinate-Systems)
+[JoeyDeVriez --- LearnOpenGL - Transformations](https://learnopengl.com/Getting-started/Transformations)
+[JoeyDeVriez --- LearnOpenGL - Camera](https://learnopengl.com/Getting-started/Camera)
 </Note>
 
 <Note title="Wikipedia", type="resource">
@@ -364,6 +555,13 @@ Mohammad Reza Nemati
 
 <Note title="Youtube", type="resource">
 
+[Leios Labs ---  What are affine transformations?](https://www.youtube.com/watch?v=E3Phj6J287o)
+[3Blue1Brown --- Essence of linear algebra (highly recommended playlist)](https://www.youtube.com/watch?v=fNk_zzaMoSs&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab)
+[3Blue1Brown --- Quaternions and 3d rotation, explained interactively](https://www.youtube.com/watch?v=zjMuIxRvygQ)
+[pikuma --- Math for Game Developers (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-93QtJmGnQcJRdiqMBEwZ7_)
+[pikuma --- 3D Graphics (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-97qGEeOWnxZBqvR_zwjWoo)
+[pikuma --- Perspective Projection Matrix](https://www.youtube.com/watch?v=EqNcqBdrNyI)
+[javidx9 --- Essential Mathematics For Aspiring Game Developers](https://www.youtube.com/watch?v=DPfxjQ6sqrc)
 ...
 
 </Note>
