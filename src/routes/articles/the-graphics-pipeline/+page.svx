@@ -40,7 +40,7 @@ towards executing a TON of **branch-less** or **branch-light** code in parallel-
 code for each pixel on your screen, there are a ton of pixels but they mostly do their own independent logic.  </Tip>.
 
 The updated scene data is then prepped and fed to the **GPU** for **geometry processing**. Here 
-we figure out where everything ends up on our screen by doing lots of fancy matrix math.
+we figure out where everything ends up on our screen by doing lots of fancy linear algebra.
 We'll cover this stage in depth very soon so don't panic (yet).
 
 Afterwards, the final geometric data are converted into <Tip text="pixels"> Pixel is the shorthand for **picture-element**, Voxel is the shorthand for **volumetric-element**. </Tip>
@@ -325,7 +325,7 @@ So far, all the examples show the geometry in NDC (Normalized Device Coordinates
 This is because the **rasterizer** expects the final vertex coordinates to be in the NDC range.
 Anything outside of this range is **clipped** henceforth not visible.
 
-Yet, as you'll understand after this section, doing everything in the **NDC** is inconvenient and very limiting.
+Yet, as you'll understand soon, doing everything in the **NDC** is inconvenient and very limiting.
 What we'd like to do is to transform these vertices through 5 different coordinate systems before ending up in NDC
 (or outside of if they're meant to be clipped).
 The purpose of each space will be explained shortly. But doing these **transformations** require
@@ -337,8 +337,9 @@ But if you feel extra savvy you may skip the following **linear algebra** sectio
 <Note title="Algebra  Ahead!">
 
 The concepts in the following sections may be difficult to grasp at first. And **that's okay**, you don't
-need to pickup everything the first time you read them. If you feel passionate about these topics
-and want to have a better grasp, refer to the references at the bottom of this article.
+need to pickup everything the first time you read them (I didn't). If you feel passionate about these topics
+and want to have a better grasp, refer to the references at the bottom of this article and **take
+your time** :)
 
 </Note>
 
@@ -382,9 +383,15 @@ All **affine** transformations can be represented as matrix operations using **h
 
 **Scale**
 
+**Rotation**
+
 **Translation**
 
-**Rotation**
+<Note type="info", title="Homogeneous coordinates">
+
+Why are we using 4D matrixes for vertices that are three dimensional?
+
+</Note>
 
 **Embedding it all in one matrix**
 
@@ -460,8 +467,9 @@ baa
 
 </Note>
 
-But don't get over-confident yet, this is the **simple** part of the view matrix that handles only
-the **position**. But in any worthwhile game we need to **look around** too and orient ourselves.
+** Position **
+
+** Orientation **
 
 We can **rotate** the camera, or more accurately **reverse-rotate** the world, via 3 unit vectors snuggled
 inside a matrix, the **up** vector (U), the **target** or **direction** vector (D) and the **right**
@@ -495,15 +503,33 @@ to the **local space** vertices of our model:
 That's two down, one left to slay!
 
 ## Coordinate system -- Clip Space
-This one is gonna get a little complicated so buckle up :)
 
-">>>>>" need to study more for the rest of the coordinates section, forgot every fucking thing I knew...
+**Overview***
+
+**Aspect Ratio***
+
+**Field of view***
+
+**Normalization***
+
+**Putting it all together**
+
+<Note tye="math", title="Model_View transformation">
+
+```math
+\text{model}_M * \text{view}_M * \text{projection}_M * \text{local}_V 
+```
+
+</Note>
 
 ## Coordinate system -- Screen Space
+
+** Viewport transform **
 
 ## Coordinate system -- Recap
 
 <Note title="Coordinate System", type="diagram">
+
 
 </Note>
 
@@ -530,18 +556,15 @@ than only positions.
 
 <Note title="Reviewers", type="review">
 
-Mohammad-Reza Nemati
+MMZ ❤️
 
 </Note>
 
 <Note title="Books", type="resource">
 
-[Tomas Akenine Moller --- Real-Time Rendering 4th Edition (referenced multiple times)](https://www.realtimerendering.com/intro.html)
-[JoeyDeVriez --- LearnOpenGL - Hello Triangle](https://learnopengl.com/Getting-started/Hello-Triangle)
-[JoeyDeVriez --- LearnOpenGL - Face Culling](https://learnopengl.com/Advanced-OpenGL/Face-culling)
-[JoeyDeVriez --- LearnOpenGL - Coordinate Systems](https://learnopengl.com/Getting-started/Coordinate-Systems)
-[JoeyDeVriez --- LearnOpenGL - Transformations](https://learnopengl.com/Getting-started/Transformations)
-[JoeyDeVriez --- LearnOpenGL - Camera](https://learnopengl.com/Getting-started/Camera)
+[Tomas Akenine Moller --- Real-Time Rendering](https://www.realtimerendering.com/intro.html)
+[Gabriel Gambetta --- Computer Graphics from Scratch](https://gabrielgambetta.com/computer-graphics-from-scratch/)
+[JoeyDeVriez --- LearnOpenGL](https://learnopengl.com/)
 </Note>
 
 <Note title="Wikipedia", type="resource">
@@ -555,24 +578,26 @@ Mohammad-Reza Nemati
 
 <Note title="Youtube", type="resource">
 
+[Miolith --- Quick Understanding of Homogeneous Coordinates for Computer Graphics](https://www.youtube.com/watch?v=o-xwmTODTUI)
 [Leios Labs ---  What are affine transformations?](https://www.youtube.com/watch?v=E3Phj6J287o)
 [3Blue1Brown --- Essence of linear algebra (highly recommended playlist)](https://www.youtube.com/watch?v=fNk_zzaMoSs&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab)
 [3Blue1Brown --- Quaternions and 3d rotation, explained interactively](https://www.youtube.com/watch?v=zjMuIxRvygQ)
 [pikuma --- Math for Game Developers (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-93QtJmGnQcJRdiqMBEwZ7_)
 [pikuma --- 3D Graphics (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-97qGEeOWnxZBqvR_zwjWoo)
-[pikuma --- Perspective Projection Matrix](https://www.youtube.com/watch?v=EqNcqBdrNyI)
+[Cem Yuksel --- Introduction to Computer Graphics (playlist)](https://www.youtube.com/watch?v=vLSphLtKQ0o&list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh)
 [javidx9 --- Essential Mathematics For Aspiring Game Developers](https://www.youtube.com/watch?v=DPfxjQ6sqrc)
-...
-
 </Note>
 
-<Note title="Stackoverflow", type="resource">
+<Note title="Articles", type="resource">
 
-[Why do 3D engines primarily use triangles to draw surfaces?](https://stackoverflow.com/questions/6100528/why-do-3d-engines-primarily-use-triangles-to-draw-surfaces)
+[Stackoverflow --- Why do 3D engines primarily use triangles to draw surfaces?](https://stackoverflow.com/questions/6100528/why-do-3d-engines-primarily-use-triangles-to-draw-surfaces)
+[The ryg blog --- The barycentric conspiracy](https://fgiesen.wordpress.com/2013/02/06/the-barycentric-conspirac/)
+[Juan Pineda --- A Parallel Algorithm for Polygon Rasterization](https://www.cs.drexel.edu/~deb39/Classes/Papers/comp175-06-pineda.pdf)
+[Kristoffer Dyrkorn --- A fast and precise triangle rasterizer](https://kristoffer-dyrkorn.github.io/triangle-rasterizer/)
 </Note>
 
-<Note title="Vulakn Docs", type="resource">
+<Note title="Documentations", type="resource">
 
-[Drawing](https://docs.vulkan.org/spec/latest/chapters/drawing.html)
-[Pipeline Diagram](https://docs.vulkan.org/spec/latest/_images/pipelinemesh.svg)
+[Vulkan Docs --- Drawing](https://docs.vulkan.org/spec/latest/chapters/drawing.html)
+[Vulkan Docs --- Pipeline Diagram](https://docs.vulkan.org/spec/latest/_images/pipelinemesh.svg)
 </Note>
