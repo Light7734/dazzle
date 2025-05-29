@@ -530,27 +530,159 @@ That's two down, one left to slay!
 
 <Note title="Coordinate System", type="diagram">
 
-
 </Note>
 
 ## Vertex Shader
 
-## Tessellation & Geometry Shaders
+
+<Note title="Shaders", type="info">
+
+**Why is it called a "shader" when it's not "shading" anything?**
+
+</Note>
+
+## Geometry Shader (optional stage)
+** You may skip this stage, and I recommend you fucking do so! **
+
+**Different levels of parallelism (why do we still need the vertex shader)**
+
+**Takes as input "a" primitive, outputs any type of (but only one of) primitive(s)**
+
+**Adjecency primitive types**
+
+**Primitive type only indicates number of input vertices since the primitive itself will get cconsumed**
+
+**Geometry shader instancing**
+
+**Geometry shader examples**
+
+**Tessellation/Subdivision**
+
+**Geometry shaders are out of fashion**
+
+## Tessellation Shader (optional stage)
+
+**Subdivision**
+
+**Why do we subdivide?**
+
+**Mathmatical presentation more compressed than actual vertex data**
+
+**Geometry shaders are versatile, not performant**
+
+**Data movement bottleneck**
+
+**LoD**
+
+**Tessellation Control Shader** (or Hull Shader in DirectX terminology)
+
+**Tessllator**
+**Quad Primitives**
+**Isolines**
+
+**Outer tessellation / Inner tessellation**
+
+**Tessellation Evaluation Shader** (or Domain Shader in DirectX terminology)
+
+**Tessellation examples**
+
 
 ## Geometry Processing -- Recap
+You've just learned how the first major section of the graphics pipeline works! But before rewarding
+your pretty eyes with a much deserved rest, let's have a quick recap!
+
+// Vertex Data -> 
+// Input Assembly -> 
+// Vertex Shader -> 
+// Geometry Shader -> 
+// Tessellation Control Shader -> Tessellator -> Tessellation Evaluation Shader
+
+The geometric detail that we now have is not **real**. Perfect triangle do not exist in the real world.
+Our next challenge in this journey is to turn these mathmatical representations into something
+concrete and significant. We're gonna take these primitives and turn them into **pixels** through
+a fancy process called **rasterization**.
 
 ## Rasterization
+
+**Bounding Box**
+
+**Winding order**
+
+**P needs to be on the "RIGHT" side of a->b**
+
+**Cross Product**
+
+**Interpolation**
+
 Remember the god forsaken **input assembler**? Let's expand our understanding of it
 since-- for simplicity's sake, we skipped over the fact that **vertices** can hold much, much more data
 than only positions.
 
+**Barycentric Interpolation** NOTE NOT linear interpolation
+
+**Optimizations**
+
+<Note title="Software Rasterization">
+
+What we've implemented is a simple toy rasterizer written to be run on the CPU for educational
+purposes only. It is inefficient, has shit precision (integer precision) thus choppy when moving things, and has many, many problems.
+However, GPUs have dedicated hardwares and incredibly optimized algorithms on those to do this
+sort of thing; hence what we made is called a **software** rasterizer ---as opposed to the usual
+**hardware** rasterizer.
+
+I'd like to remind you that the simplicity of the **rasterization** algorithm is one of the most
+important reasons we use **triangles** during **polygonal rendering**.
+
+</Note>
+
 ## Pixel Processing
 
 ## Output Merger
+**Blending**
 
 ## The Future
+**Mesh shaders**
+
+**Real-time raytracing**
+
+**Deferred Shading**
 
 ## Conclusion
+Let's---for the final time, have a quick recap and go everything at the speed of **light** :)
+
+**Application** <br/>
+The pipeline starts simulating the world on the **CPU** and updates, changes, destroys things
+through systems like physics, ecs, events, etc, etc. Here we have full autonomy.
+
+**Geometry Processing** <br/>
+The **graphics pipeline** then provides the **scene data** as a set of **vertices** that form
+**primitives** to the **input assembler**. We use **triangles** because they're the best! Then this
+**input assembler** does what it says and **assembles** some input for the **vertex shader**.
+This **vertex shader** transforms the vertices through different **coordinate systems** and figure out where
+everything should end up on the screen. Here we can optionally do some work with the **geomtry** and **tessellation** 
+steps to generate more geometry on the fly---since expressing some geometric detail mathmatically is more efficient than providing the concrete geometry. 
+This would help us lighten the load on the DRAM -> GPU data lines which are often a bottleneck.
+
+**Rasterization** <br/>
+After all that **geometry processing** we pass the final geometry data to the hardcoded hardware **rasterizer**
+to do **rasterization** and **interpolation** for us and convert the **abstract geometry** into concrete **pixels**.
+All by using triangles because they're the best.
+
+**Pixel Processing** <br/>
+The **rasterizer** then hands off the work to the **pixel/fragment shader** and our world will end up
+being so sexy and colorful! After processing all the fragments the **output merger** will squeeze these
+together and compose the final image.
+
+**Presentation** <br/>
+The **presentation engine** will then feed the output of the pipeline to the target display **surface**
+for your pretty eyes to digest and enjoy.
+
+You've done it! You read through all this garbage just to learn how the **graphics pipeline** works.
+Give yourself a pat on the back and a well deserved reward.
+
+Thanks for reading all the way through! Any feedback, criticism, or question is welcome so contact
+me if you'd like. Good luck on your journey, wherever it may take you :)
+
 
 ## Sources
 
@@ -558,13 +690,17 @@ than only positions.
 
 MMZ ❤️
 
+Grammarly
+
+Some LLMs
+
 </Note>
 
 <Note title="Books", type="resource">
 
-[Tomas Akenine Moller --- Real-Time Rendering](https://www.realtimerendering.com/intro.html)
+[Joey De Vriez --- LearnOpenGL](https://learnopengl.com/)
+[Tomas Akenine Moller --- Real-Time Rendering (4th ed)](https://www.realtimerendering.com/intro.html)
 [Gabriel Gambetta --- Computer Graphics from Scratch](https://gabrielgambetta.com/computer-graphics-from-scratch/)
-[JoeyDeVriez --- LearnOpenGL](https://learnopengl.com/)
 </Note>
 
 <Note title="Wikipedia", type="resource">
@@ -585,6 +721,7 @@ MMZ ❤️
 [pikuma --- Math for Game Developers (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-93QtJmGnQcJRdiqMBEwZ7_)
 [pikuma --- 3D Graphics (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-97qGEeOWnxZBqvR_zwjWoo)
 [Cem Yuksel --- Introduction to Computer Graphics (playlist)](https://www.youtube.com/watch?v=vLSphLtKQ0o&list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh)
+[Cem Yuksel --- Interactive Computer Graphics (playlist)](https://www.youtube.com/watch?v=UVCuWQV_-Es&list=PLplnkTzzqsZS3R5DjmCQsqupu43oS9CFN&pp=0gcJCV8EOCosWNin)
 [javidx9 --- Essential Mathematics For Aspiring Game Developers](https://www.youtube.com/watch?v=DPfxjQ6sqrc)
 </Note>
 
@@ -594,6 +731,7 @@ MMZ ❤️
 [The ryg blog --- The barycentric conspiracy](https://fgiesen.wordpress.com/2013/02/06/the-barycentric-conspirac/)
 [Juan Pineda --- A Parallel Algorithm for Polygon Rasterization](https://www.cs.drexel.edu/~deb39/Classes/Papers/comp175-06-pineda.pdf)
 [Kristoffer Dyrkorn --- A fast and precise triangle rasterizer](https://kristoffer-dyrkorn.github.io/triangle-rasterizer/)
+[Microsoft --- Rasterization Rules](https://learn.microsoft.com/en-us/windows/win32/direct3d11/d3d10-graphics-programming-guide-rasterizer-stage-rules)
 </Note>
 
 <Note title="Documentations", type="resource">
