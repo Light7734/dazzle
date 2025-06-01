@@ -542,8 +542,6 @@ That's two down, one left to slay!
 </Note>
 
 ## Geometry Shader (optional stage)
-** You may skip this stage, and I recommend you fucking do so! **
-
 **Different levels of parallelism (why do we still need the vertex shader)**
 
 **Takes as input "a" primitive, outputs any type of (but only one of) primitive(s)**
@@ -577,7 +575,9 @@ That's two down, one left to slay!
 **Tessellation Control Shader** (or Hull Shader in DirectX terminology)
 
 **Tessllator**
+
 **Quad Primitives**
+
 **Isolines**
 
 **Outer tessellation / Inner tessellation**
@@ -585,7 +585,6 @@ That's two down, one left to slay!
 **Tessellation Evaluation Shader** (or Domain Shader in DirectX terminology)
 
 **Tessellation examples**
-
 
 ## Geometry Processing -- Recap
 You've just learned how the first major section of the graphics pipeline works! But before rewarding
@@ -620,32 +619,78 @@ than only positions.
 
 **Barycentric Interpolation** NOTE NOT linear interpolation
 
-**Optimizations**
+**Some Optimizations**
 
 <Note title="Software Rasterization">
 
 What we've implemented is a simple toy rasterizer written to be run on the CPU for educational
-purposes only. It is inefficient, has shit precision (integer precision) thus choppy when moving things, and has many, many problems.
-However, GPUs have dedicated hardwares and incredibly optimized algorithms on those to do this
+purposes only. It is inefficient, has shit precision (integer precision) thus it is choppy when moving things around, and has many problems.
+However, GPUs have dedicated hardwares that run incredibly optimized algorithms to do this
 sort of thing; hence what we made is called a **software** rasterizer ---as opposed to the usual
 **hardware** rasterizer.
 
 I'd like to remind you that the simplicity of the **rasterization** algorithm is one of the most
-important reasons we use **triangles** during **polygonal rendering**.
+important reasons we use **triangles** to do **polygonal rendering**. If polygons had variable
+number of edges then it would be really difficult to come up with efficient algorithms for doing this.
 
 </Note>
 
 ## Pixel Processing
+**Overview**
+
+## Texturing
+**Vertex Data Extension**
+
+**Texture Coordinates**
+
+**Texture Sampling**
+
+**Mipmaps**
+
+**Non-color Data**
+
+## Lighting
+**Phong Shading**
+
+// The model was named after its developer B`ui Tóng Phong
+
+**Ambient**
+
+**Diffuse**
+
+**Specular**
+
+**Combined (Phong)**
+
+## Anti-Aliasing
+**SSAA**
+
+**MSAA**
 
 ## Output Merger
 **Blending**
 
-## The Future
+## Some Optimizations
+
+## Deferred Shading
+**G Buffer**
+
+**Forward pass**
+
+**Deferred pass** or the **Lighting pass**
+
+**Pros and Cons**
+
+**Anti Aliasing**
+
+**High memory consumption**
+
+**May be slower for simple scenes**
+
+## The Future of the Graphics Pipeline
 **Mesh shaders**
 
 **Real-time raytracing**
-
-**Deferred Shading**
 
 ## Conclusion
 Let's---for the final time, have a quick recap and go everything at the speed of **light** :)
