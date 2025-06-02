@@ -554,13 +554,15 @@ Let's recap!
 
 <Note type="diagram", title="Geometry Processing">
 
-Vertex Data -> 
+Prepared Vertex Data -> 
 
-Input Assembly -> 
+Input Assembly turns Vertex Data into digestable structures for the Vertex Shader  -> 
 
-Vertex Shader -> 
+Vertex Shader is invoked per vertex for applying transformations via some clever linear algebra -> 
 
-Geometry & Tessellation Shaders -> 
+Geometry & Tessellation Shaders expand the geometry on-the-fly and may apply more transformations -> 
+
+... Rasterizer
 
 </Note>
 
