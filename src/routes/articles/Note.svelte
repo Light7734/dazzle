@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Info, BookCopy, Eye, Network, Sigma, Image } from '@lucide/svelte';
+	import { Info, BookCopy, Eye, Network, Sigma, Image, Quote } from '@lucide/svelte';
 	let { title = '', type = 'info' } = $props();
 </script>
 
@@ -12,6 +12,8 @@
 				<Image />
 			{:else if type == 'diagram'}
 				<Network />
+			{:else if type == 'quote'}
+				<Quote />
 			{:else if type == 'math'}
 				<Sigma />
 			{:else if type == 'review'}
@@ -24,6 +26,8 @@
 		{#if type == 'info'}
 			<div class="horiz_line" style:background-color="#8ec07c"></div>
 		{:else if type == 'diagram'}
+			<div class="horiz_line" style:background-color="#d3869b"></div>
+		{:else if type == 'quote'}
 			<div class="horiz_line" style:background-color="#d3869b"></div>
 		{:else if type == 'image'}
 			<div class="horiz_line" style:background-color="#d3869b"></div>
@@ -40,6 +44,8 @@
 		{#if type == 'info'}
 			<div class="line" style:background-color="#8ec07c"></div>
 		{:else if type == 'diagram'}
+			<div class="line" style:background-color="#d3869b"></div>
+		{:else if type == 'quote'}
 			<div class="line" style:background-color="#d3869b"></div>
 		{:else if type == 'image'}
 			<div class="line" style:background-color="#d3869b"></div>
@@ -63,8 +69,8 @@
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
 
-    .title {
-    }
+	.title {
+	}
 
 	.note {
 		display: block;

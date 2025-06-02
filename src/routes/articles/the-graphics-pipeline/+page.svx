@@ -1,5 +1,5 @@
 ---
-title: The Graphics Pipeline
+title: The (Modern) Graphics Pipeline
 date: "April 20 - 2025"
 ---
 
@@ -463,8 +463,6 @@ movement is to apply this translation matrix:
 
 <Note type="math", title="Simplified movement to the right">
 
-baa
-
 </Note>
 
 ** Position **
@@ -534,72 +532,48 @@ That's two down, one left to slay!
 
 ## Vertex Shader
 
-
 <Note title="Shaders", type="info">
 
 **Why is it called a "shader" when it's not "shading" anything?**
 
 </Note>
 
-## Geometry Shader (optional stage)
-**Different levels of parallelism (why do we still need the vertex shader)**
+## Geometry & Tessellation Shaders (optional stages)
+**After Vertex Shader --> Two optional stages**
 
-**Takes as input "a" primitive, outputs any type of (but only one of) primitive(s)**
+**We can generate more geometry here since some geometric details
+are expressed more efficiently through mathmatical expressions than raw vertex data**
 
-**Adjecency primitive types**
+**However since these 2 stages are "optional" and not required for us to render a scene, we'll skip over them---for now**
 
-**Primitive type only indicates number of input vertices since the primitive itself will get cconsumed**
+**But before focusing on steps meant to "optimize" the pipeline, let's first figure out how
+the pipeline works in a fundumentall sense. We'll come back to these stages after covering
 
-**Geometry shader instancing**
+## Geometry Processing
+Let's recap!
 
-**Geometry shader examples**
+<Note type="diagram", title="Geometry Processing">
 
-**Tessellation/Subdivision**
+Vertex Data -> 
 
-**Geometry shaders are out of fashion**
+Input Assembly -> 
 
-## Tessellation Shader (optional stage)
+Vertex Shader -> 
 
-**Subdivision**
+Geometry & Tessellation Shaders -> 
 
-**Why do we subdivide?**
-
-**Mathmatical presentation more compressed than actual vertex data**
-
-**Geometry shaders are versatile, not performant**
-
-**Data movement bottleneck**
-
-**LoD**
-
-**Tessellation Control Shader** (or Hull Shader in DirectX terminology)
-
-**Tessllator**
-
-**Quad Primitives**
-
-**Isolines**
-
-**Outer tessellation / Inner tessellation**
-
-**Tessellation Evaluation Shader** (or Domain Shader in DirectX terminology)
-
-**Tessellation examples**
-
-## Geometry Processing -- Recap
-You've just learned how the first major section of the graphics pipeline works! But before rewarding
-your pretty eyes with a much deserved rest, let's have a quick recap!
-
-// Vertex Data -> 
-// Input Assembly -> 
-// Vertex Shader -> 
-// Geometry Shader -> 
-// Tessellation Control Shader -> Tessellator -> Tessellation Evaluation Shader
+</Note>
 
 The geometric detail that we now have is not **real**. Perfect triangle do not exist in the real world.
 Our next challenge in this journey is to turn these mathmatical representations into something
 concrete and significant. We're gonna take these primitives and turn them into **pixels** through
 a fancy process called **rasterization**.
+
+<Note type="review", title="Time for a break?">
+
+You might wanna give your pretty eyes and that smart brain of yours a much deserved rest :)
+</Note>
+
 
 ## Rasterization
 
@@ -667,12 +641,24 @@ number of edges then it would be really difficult to come up with efficient algo
 
 **MSAA**
 
+## Pixel Shaders
+
 ## Output Merger
 **Blending**
 
-## Some Optimizations
+## Optimizing the Pipeline
+<Note type="quote" title="An idiot admires complexity, a genius admires simplicity.">
+
+--- Terry A. Davis
+</Note>
+
+**Out of the mathmatical world, into the engineering world!**
 
 ## Deferred Shading
+**Deferred Shading**
+
+**Bottleneck in pixel shading**
+
 **G Buffer**
 
 **Forward pass**
@@ -687,10 +673,58 @@ number of edges then it would be really difficult to come up with efficient algo
 
 **May be slower for simple scenes**
 
-## The Future of the Graphics Pipeline
-**Mesh shaders**
+**How we did thing in the traditional graphics pipeline**
 
-**Real-time raytracing**
+## Geometry and Tessellation Shaders (optional stages)
+**Different levels of parallelism (why do we still need the vertex shader)**
+
+**Takes as input "a" primitive, outputs any type of (but only one of) primitive(s)**
+
+**Adjecency primitive types**
+
+**Primitive type only indicates number of input vertices since the primitive itself will get cconsumed**
+
+**Geometry shader instancing**
+
+**Geometry shader examples**
+
+**Tessellation/Subdivision**
+
+**Geometry shaders are out of fashion**
+
+**Subdivision**
+
+**Why do we subdivide?**
+
+**Mathmatical presentation more compressed than actual vertex data**
+
+**Geometry shaders are versatile, not performant**
+
+**Data movement bottleneck**
+
+**LoD**
+
+**Tessellation Control Shader** (or Hull Shader in DirectX terminology)
+
+**Tessllator**
+
+**Quad Primitives**
+
+**Isolines**
+
+**Outer tessellation / Inner tessellation**
+
+**Tessellation Evaluation Shader** (or Domain Shader in DirectX terminology)
+
+**Tessellation examples**
+
+## Meshlet-based Rendering
+**Intro to Mesh shaders**
+
+**Issue with Low resolution -> High resolution**
+
+**[Task Shader -> Mesh Generation -> Mesh Shader] -> Rasterization -> Pixel Shader -> Merger**
+** ^^^ GEOMETRY PROCESSING                        -> ^^^           -> Pixel Processing
 
 ## Conclusion
 Let's---for the final time, have a quick recap and go everything at the speed of **light** :)
@@ -727,7 +761,6 @@ Give yourself a pat on the back and a well deserved reward.
 
 Thanks for reading all the way through! Any feedback, criticism, or question is welcome so contact
 me if you'd like. Good luck on your journey, wherever it may take you :)
-
 
 ## Sources
 
