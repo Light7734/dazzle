@@ -1,0 +1,144 @@
+---
+title: The Graphics Pipeline --- Optimizations
+date: "April 20 - 2025"
+---
+
+<script>
+import Image from "../../Image.svelte"
+import Note from "../../Note.svelte"
+import Tip from "../../Tip.svelte"
+</script>
+
+## Optimizing the Pipeline
+<Note type="quote" title="An idiot admires complexity, a genius admires simplicity.">
+
+--- Terry A. Davis
+</Note>
+
+Let's get our heads out of the abstract and dizzying mathmatical world now and think like an engineer.
+
+**Out of the mathmatical world, into the engineering world!**
+
+## Deferred Shading
+**Deferred Shading**
+
+**Bottleneck in pixel shading**
+
+**The G Buffer**
+
+**Forward pass** or the **Geometry Pass**
+
+**Deferred pass** or the **Lighting pass**
+
+**Anti Aliasing**
+
+## Beyond G-Buffers --- Visibility Buffers
+**Pros and Cons of G-Buffers**
+
+**High memory consumption**
+
+**May be slower for simple scenes**
+
+**How we did thing in the traditional graphics pipeline**
+
+**Intro to Visbility Buffers!**
+
+## Meshlet-based Rendering
+**Intro to Mesh shaders**
+
+**Issue with Low resolution -> High resolution**
+
+**[Task Shader -> Mesh Generation -> Mesh Shader] -> Rasterization -> Pixel Shader -> Merger**
+** ^^^ GEOMETRY PROCESSING                        -> ^^^           -> Pixel Processing
+
+## Conclusion
+Let's---for the final time, have a quick recap and go everything at the speed of **light** :)
+
+**Application** <br/>
+The pipeline starts simulating the world on the **CPU** and updates, changes, destroys things
+through systems like physics, ecs, events, etc, etc. Here we have full autonomy.
+
+**Geometry Processing** <br/>
+The **graphics pipeline** then provides the **scene data** as a set of **vertices** that form
+**primitives** to the **input assembler**. We use **triangles** because they're the best! Then this
+**input assembler** does what it says and **assembles** some input for the **vertex shader**.
+This **vertex shader** transforms the vertices through different **coordinate systems** and figure out where
+everything should end up on the screen. Here we can optionally do some work with the **geomtry** and **tessellation** 
+steps to generate more geometry on the fly---since expressing some geometric detail mathmatically is more efficient than providing the concrete geometry. 
+This would help us lighten the load on the DRAM -> GPU data lines which are often a bottleneck.
+
+**Rasterization** <br/>
+After all that **geometry processing** we pass the final geometry data to the hardcoded hardware **rasterizer**
+to do **rasterization** and **interpolation** for us and convert the **abstract geometry** into concrete **pixels**.
+All by using triangles because they're the best.
+
+**Pixel Processing** <br/>
+The **rasterizer** then hands off the work to the **pixel/fragment shader** and our world will end up
+being so sexy and colorful! After processing all the fragments the **output merger** will squeeze these
+together and compose the final image.
+
+**Presentation** <br/>
+The **presentation engine** will then feed the output of the pipeline to the target display **surface**
+for your pretty eyes to digest and enjoy.
+
+You've done it! You read through all this garbage just to learn how the **graphics pipeline** works.
+Give yourself a pat on the back and a well deserved reward.
+
+Thanks for reading all the way through! Any feedback, criticism, or question is welcome so contact
+me if you'd like. Good luck on your journey, wherever it may take you :)
+
+## Sources
+
+<Note title="Reviewers", type="review">
+
+MMZ ❤️
+
+Grammarly
+
+Some LLMs
+
+</Note>
+
+<Note title="Books", type="resource">
+
+[Joey De Vriez --- LearnOpenGL](https://learnopengl.com/)
+[Tomas Akenine Moller --- Real-Time Rendering (4th ed)](https://www.realtimerendering.com/intro.html)
+[Gabriel Gambetta --- Computer Graphics from Scratch](https://gabrielgambetta.com/computer-graphics-from-scratch/)
+</Note>
+
+<Note title="Wikipedia", type="resource">
+
+[Polygonal Modeling](https://en.wikipedia.org/wiki/Polygonal_modeling)
+[Non-uniform Rational B-spline Surfaces](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline)
+[Computer Aided Design (CAD)](https://en.wikipedia.org/wiki/Computer-aided_design)
+[Rasterization](https://en.wikipedia.org/wiki/Rasterisation)
+[Euclidean geometry](https://en.wikipedia.org/wiki/Euclidean_geometry)
+</Note>
+
+<Note title="Youtube", type="resource">
+
+[Miolith --- Quick Understanding of Homogeneous Coordinates for Computer Graphics](https://www.youtube.com/watch?v=o-xwmTODTUI)
+[Leios Labs ---  What are affine transformations?](https://www.youtube.com/watch?v=E3Phj6J287o)
+[3Blue1Brown --- Essence of linear algebra (highly recommended playlist)](https://www.youtube.com/watch?v=fNk_zzaMoSs&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab)
+[3Blue1Brown --- Quaternions and 3d rotation, explained interactively](https://www.youtube.com/watch?v=zjMuIxRvygQ)
+[pikuma --- Math for Game Developers (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-93QtJmGnQcJRdiqMBEwZ7_)
+[pikuma --- 3D Graphics (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-97qGEeOWnxZBqvR_zwjWoo)
+[Cem Yuksel --- Introduction to Computer Graphics (playlist)](https://www.youtube.com/watch?v=vLSphLtKQ0o&list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh)
+[Cem Yuksel --- Interactive Computer Graphics (playlist)](https://www.youtube.com/watch?v=UVCuWQV_-Es&list=PLplnkTzzqsZS3R5DjmCQsqupu43oS9CFN&pp=0gcJCV8EOCosWNin)
+[javidx9 --- Essential Mathematics For Aspiring Game Developers](https://www.youtube.com/watch?v=DPfxjQ6sqrc)
+</Note>
+
+<Note title="Articles", type="resource">
+
+[Stackoverflow --- Why do 3D engines primarily use triangles to draw surfaces?](https://stackoverflow.com/questions/6100528/why-do-3d-engines-primarily-use-triangles-to-draw-surfaces)
+[The ryg blog --- The barycentric conspiracy](https://fgiesen.wordpress.com/2013/02/06/the-barycentric-conspirac/)
+[Juan Pineda --- A Parallel Algorithm for Polygon Rasterization](https://www.cs.drexel.edu/~deb39/Classes/Papers/comp175-06-pineda.pdf)
+[Kristoffer Dyrkorn --- A fast and precise triangle rasterizer](https://kristoffer-dyrkorn.github.io/triangle-rasterizer/)
+[Microsoft --- Rasterization Rules](https://learn.microsoft.com/en-us/windows/win32/direct3d11/d3d10-graphics-programming-guide-rasterizer-stage-rules)
+</Note>
+
+<Note title="Documentations", type="resource">
+
+[Vulkan Docs --- Drawing](https://docs.vulkan.org/spec/latest/chapters/drawing.html)
+[Vulkan Docs --- Pipeline Diagram](https://docs.vulkan.org/spec/latest/_images/pipelinemesh.svg)
+</Note>
