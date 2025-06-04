@@ -16,7 +16,10 @@ In this article we'll dive deep into the intricate details of this powerful beas
 We'll cover all the terminologies needed to understand each stage and have many restatements so don't
 worry if you don't fully grasp something at first. If you still had questions, feel free to contact me :)
 
-So without further ado---
+My initial goal of putting everything in **1 article** proved to hurt the **brevity** and the **structure** of content.
+Afterall, the **graphics pipeline** is incredibly **complex** and have gone through quite some **evolution**.
+This impelled me split the concepts into an **article series** consisting of **4 parts**, which would allow me to explain everything in sufficient depth.
+But why exactly **4 parts**?
 
 ## Overview
 
@@ -58,8 +61,24 @@ stage before it's passed on to the next. More on **culling** later so don't worr
 The pipeline will then serve (present) the output of the **pixel processing** stage, which is a **rendered image**,
 to your pretty eyes using your <Tip text="display">Usually a monitor but the technical term for it is
 the target **surface**. Which can be anything like a VR headset or some other crazy surface used for displaying purposes.</Tip>.
-But to avoid drowning you in overviews, let's jump right into the gory details of the **geometry processing**
-stage and have a recap afterwards!
+
+<Note type="info", title="Chapters of The Graphics Pipeline">
+
+**Geometry Processing**: How geometry is **represented**, **interpreted**, **transformed** and **expanded**.
+
+**Rasterization**: How the final geometric data is converted into **pixels** and what data they hold. 
+
+**Pixel Processing**: How we figure out the **final output color** of each pixel.
+
+**Optimizations**: How modern game-engines like Unreal Engine 5 optimize the pipeline.
+
+</Note>
+
+I hope it is now evident why I chose to split the concepts through 4 parts. So... let's jump right into the gory details of the **geometry processing**
+stage!
+
+
+
 
 ## Surfaces
 
@@ -143,34 +162,37 @@ Which means we avoid wasting a ton of **precious processing time** on the polygo
 we know won't be visible to us. We can safely **cull** the **back-faces** since we won't
 be seeing the **back** of a polygon when it's in the context of a closed-off model. 
 We figure this out by simply using the **winding order** of the triangle to determine whether we're looking at the
-back of the triangle or the front of it.
+back of the triangle or the front of it---I'll go in depth about **culling** in part 4.
 
 Triangles also have a very small **memory footprint**; for instance, when using the **triangle-strip** topology (more on this very soon), for each additional triangle after the first one, only **one extra vertex** is needed.
 
 The most important attribute, in my opinion, is the **algorithmic simplicity**.
 Any polygon or shape can be composed from a **set of triangles**; for instance, a rectangle is simply **two coplanar triangles**.
 Also, it is a common practice in computer science to break down hard problems into simpler, smaller problems. 
-This will be a lot more convincing when we cover the **rasterization** stage :)
+Trust me, this will be a lot more convincing when we cover the **rasterization** stage in part 2 :)
 
+<Note title="Evolution", type="info">
 
-<Note title="Bonus point, evolution", type="info">
-
-present-day **hardware** and **algorithms** have become **extremely efficient** at processing 
+As a bonus point to consider; present-day **hardware** and **algorithms** have become **extremely efficient** at processing 
 triangles by doing operations such as sorting, rasterizing, etc, after eons of evolving around them.
+
+We literary have a **fixed function** (unprogrammable) stage in the pipeline dedicated for rasterizing
+triangles.
 
 </Note>
 
 ## Primitive Topology
 So, we got our set of vertices, but having a bunch of points floating around wouldn't make a scene very lively
-(or gory), we need to form **triangles** out of them to compose **models** (corpse xd).
+(or gory), we need to form **triangles** out of them to compose **models** (like our beautiful corpse).
 
-We communicate to the computer the <Tip text="toplogy"> The way in which constituent parts are interrelated or arranged.--mid 19th century: via German from Greek topos ‘place’ + -logy.---Oxford Languages </Tip>
-of the primitives to be generated from our set of vertices by
-configuring the **primitive topology** of the **input assembler**.
-We'll get into the **input assembler** bit in a second, but let's clarify the topology with some examples.
+**Input assembler** is the stage responsible for **concatenating** our vertices (the input) to assemble **primitives**.
+It is a **fixed function** stage so we can only configure it (it's not programmable).
+We can tell the assembler how it should interpret the vertex data by configuring its **primitive** <Tip text="toplogy"> The way in which constituent parts are interrelated or arranged.--mid 19th century: via German from Greek topos ‘place’ + -logy.---Oxford Languages </Tip>.
+
+Instead of explaining with words, I'm going to show you how each type of topology works with pictures. Buckle up!
 
 When the topology is **point list**, each **consecutive vertex** (v) defines a **single point** primitive (p)
-and the number of primitives (n_p) is equals to the number of vertices (n_v).
+and the number of primitives (n of p) is equals to the number of vertices (n of v).
 
 <Note title="", type="image">
 
@@ -190,7 +212,7 @@ and the number of primitives (n_p) is equals to the number of vertices (n_v).
 
 </Note>
 
-When the topology is **line list**, each **consecutive pair of vertices** defines a **single line**
+When the topology is **line list**, each **consecutive pair of vertices** defines a **single line**:
 
 <Note title="", type="image">
 
@@ -210,7 +232,7 @@ When the topology is **line list**, each **consecutive pair of vertices** define
 
 </Note>
 
-When the primitive topology is line strip, **one line** is defined by each **vertex and the following vertex**, according to the equation:
+When the primitive topology is **line strip**, **one line** is defined by each **vertex and the following vertex**:
 
 <Note title="", type="image">
 
@@ -231,7 +253,7 @@ When the primitive topology is line strip, **one line** is defined by each **ver
 
 </Note>
 
-When the primitive topology is triangle list, each **consecutive set of three vertices** defines a **single triangle**, according to the equation:
+When the primitive topology is **triangle list**, each **consecutive set of three vertices** defines a **single triangle**:
 
 <Note title="", type="image">
 
@@ -251,7 +273,7 @@ When the primitive topology is triangle list, each **consecutive set of three ve
 
 </Note>
 
-When the primitive topology is triangle strip, **one triangle** is defined by each **vertex and the two vertices that follow it**, according to the equation:
+When the primitive topology is **triangle strip**, **one triangle** is defined by each **vertex and the two vertices that follow it**:
 
 <Note title="", type="image">
 
@@ -272,7 +294,7 @@ When the primitive topology is triangle strip, **one triangle** is defined by ea
 </Note>
 
 
-When the primitive topology is trinagle fan, triangleas are defined **around a shared common vertex**, according to the equation:
+When the primitive topology is **triangle fan**, **triangles** are defined **around a shared common vertex**:
 
 <Note title="", type="image">
 
@@ -293,25 +315,92 @@ When the primitive topology is trinagle fan, triangleas are defined **around a s
 </Note>
 
 ## Indices
-Indices are an array of integers that reference vertices in a vertex buffer.
-They define the order in which vertices are used to form primitives (triangles, strips, etc.),
-allowing vertex reuse and reducing memory usage. Instead of duplicating vertex data, indices let you build complex geometry efficiently.
+
+
+**Indices** are an array of integers that reference the **vertices** in a vertex buffer.
+They define the **order** in which vertices should be read (and re-read) by the **input assembler**. 
+Which allows **vertex reuse** and reduces memory usage by preventing duplicate vertices.
+
+Imagine the following scenario:
+```cc
+float triangle_vertices[] = {
+ // x__,  y__, z__
+    0.0,  0.5, 0.0, // center top
+   -0.5, -0.5, 0.0, // bottom left
+    0.5, -0.5, 0.0, // bottom right
+};
+```
+
+Here we have one triangle primitive, cool! Now let's create a rectangle:
+```cc
+float vertices[] = {
+  // first triangle
+  // x__   y__  z__
+     0.5,  0.5, 0.0, // top right
+     0.5, -0.5, 0.0, // bottom right << DUPLICATE
+    -0.5,  0.5, 0.0, // top left << DUPLICATE
+
+  // second triangle
+  // x__   y__  z__
+     0.5, -0.5, 0.0, // bottom right << DUPLICATE
+    -0.5, -0.5, 0.0, // bottom left
+    -0.5,  0.5, 0.0, // top left << DUPLICATE
+}; 
+```
+
+As indicated by the comments, we have two **identical** vertices. This situation only gets worse 
+for each additional attribute per vertex (yep, vertices pack a lot more information than positions, you'll understand soon).
+And in a large model with hundreds of thousands of triangles, it becomes unacceptable. Hence we use
+indexed rendering:
+
+```cc
+float vertices[] = {
+  // first triangle
+  // x__   y__  z__
+     0.5,  0.5, 0.0, // top right
+     0.5, -0.5, 0.0, // bottom right
+    -0.5, -0.5, 0.0, // bottom left
+    -0.5,  0.5, 0.0, // top left
+};
+
+unsigned int indices[] = {
+    0, 1, 3,   // first triangle
+    1, 2, 3    // second triangle
+};  
+```
+
+And you might be asking, what about **triangle strips** we just talked about? Well, if you try to visualize it,
+a large model cannot possibly be made from a single strip of triangles, but from many. And we might not even use
+triangle strips (we might use triangle lists).
+
+Either way, using indices is optional but almost always a good idea to use them!
+
+
+<Note title="Post-Transform Vertex Cache", type="info">
+
+Indexed rendering also allows the GPU to use a neat optimization trick called **post-transform vertex cache** where
+if the same index is used after **transformations** happened, it'll fetch the result that's recently cached and
+won't re-run the transformation logic again.
+
+I'll explain how vertices are transformed soon, don't worry (yet).
+
+</Note>
 
 ## **Input Assembler**
-Every section before this explained terminologies needed to grasp this,
-section colored in yell-ow are concrete pipeline stages where some code gets executed
-which processes the data we feed to it based on the configurations we set on it.
+Alrighty! Do we have everything we need?
 
-The **vertices** and **indices** are provided to this stage via something we call buffers.
-So technically we have to provide  **two** buffers here, a **vertex buffer** and a **index buffer**.
+We got our **vertices** to represent geometry. We set our **primitive topology** to determine
+how to concatenate them. And we optionally (but most certainly) provided some **indices** to avoid
+duplicate vertex data.
 
-To give you yet-another ovreview, this is the diagram of the **geometry processing** section of 
-our pipeline:
+All this data (and configuration) is then fed to the very first stage of the **graphics pipeline** called
+the **input assembler**. Which as stated before, is responsible for **assembling** primitives from our **input** (vertices and indices).
 
-<Note title="Geometry Processing Pipeline", type="diagram">
+<Note type="diagram", title="Geometry Processing">
 
-Draw --> Input Assembler -> Vertex Shader -> Tessellation Control Shader -> Tessellation Primitive Generator -> Tessellation Evaluation Shader -> Geometry Shader -> Vertex Post-Processing -> ... Rasterization ...
+
 </Note>
+
 
 ## Coordinate System -- Overview
 We got our surface representation (vertices), we got our indices, we set the primitive topology type, and we gave these
@@ -330,6 +419,7 @@ What we'd like to do is to transform these vertices through 5 different coordina
 (or outside of if they're meant to be clipped).
 The purpose of each space will be explained shortly. But doing these **transformations** require
 a lot of **linear algebra**, specifically **matrix operations**.
+So let's get some refresher on the concepts
 
 <Note title="Algebra  Ahead!">
 
@@ -377,6 +467,21 @@ your time** :)
 **Scale**
 
 **Rotation**
+
+<Note type="info", title="Gimbal Lock">
+
+Representing rotations like this makes us prone to a phenomenon called **gimbal lock** where we lose
+an axis of control. A way of avoiding this is to rotate around an arbitary axis (makes it a lot harder
+to happen but still possible).
+
+The ideal way is to use <Tip text="quaternions" >A quaternion is a four-part hyper-complex number used in three-dimensional rotations and orientations.
+A quaternion number is represented in the form a+bi+cj+dk, where a, b, c, and d parts are real numbers, and i, j, and k are the basis elements, satisfying the equation: i2 = j2 = k2 = ijk = −1.</Tip>,
+which not only make gimbal lock impossible but are also more computationally friendly.
+
+A full discussion about quaternions is beyond the scope of this article. However, if you're so interested,
+I've left links at the end of this article for further study.
+
+</Note>
 
 **Why Translation is not a linear transformation**
 
@@ -533,18 +638,9 @@ That's two down, one left to slay!
 
 </Note>
 
-## Geometry & Tessellation Shaders (optional stages)
-**After Vertex Shader --> Two optional stages**
+## Geometry Shader (optional stage)
+**We can generate more geometry here since some geometric details are expressed more efficiently through mathmatical expressions than raw vertex data**
 
-**We can generate more geometry here since some geometric details
-are expressed more efficiently through mathmatical expressions than raw vertex data**
-
-**However since these 2 stages are "optional" and not required for us to render a scene, we'll skip over them---for now**
-
-**But before focusing on steps meant to "optimize" the pipeline, let's first figure out how
-the pipeline works in a fundumentall sense. We'll come back to these stages after covering
-
-## Geometry and Tessellation Shaders (optional stages)
 **Different levels of parallelism (why do we still need the vertex shader)**
 
 **Takes as input "a" primitive, outputs any type of (but only one of) primitive(s)**
@@ -573,6 +669,7 @@ the pipeline works in a fundumentall sense. We'll come back to these stages afte
 
 **LoD**
 
+## Tessellation Shader (optional stage)
 **Tessellation Control Shader** (or Hull Shader in DirectX terminology)
 
 **Tessllator**
@@ -587,8 +684,8 @@ the pipeline works in a fundumentall sense. We'll come back to these stages afte
 
 **Tessellation examples**
 
-## Geometry Processing
-Let's recap!
+## Geometry Processing --- Conclusion
+Let's wrap up!
 
 <Note type="diagram", title="Geometry Processing">
 
@@ -609,6 +706,9 @@ Our next challenge in this journey is to turn these mathmatical representations 
 concrete and significant. We're gonna take these primitives and turn them into **pixels** through
 a fancy process called **rasterization**.
 
+You can continue on to [part 2](/articles/the-graphics-pipeline/rasterization) of this article series and learn all about how rasterization
+works.
+
 ## Sources
 
 <Note title="Reviewers", type="review">
@@ -623,44 +723,44 @@ Some LLMs
 
 <Note title="Books", type="resource">
 
-[Joey De Vriez --- LearnOpenGL](https://learnopengl.com/)
-[Tomas Akenine Moller --- Real-Time Rendering (4th ed)](https://www.realtimerendering.com/intro.html)
-[Gabriel Gambetta --- Computer Graphics from Scratch](https://gabrielgambetta.com/computer-graphics-from-scratch/)
+[Joey De Vriez --- LearnOpenGL](https://learnopengl.com/) <br/>
+[Tomas Akenine Moller --- Real-Time Rendering (4th ed)](https://www.realtimerendering.com/intro.html) <br/>
+[Gabriel Gambetta --- Computer Graphics from Scratch](https://gabrielgambetta.com/computer-graphics-from-scratch/) <br/>
 </Note>
 
 <Note title="Wikipedia", type="resource">
 
-[Polygonal Modeling](https://en.wikipedia.org/wiki/Polygonal_modeling)
-[Non-uniform Rational B-spline Surfaces](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline)
-[Computer Aided Design (CAD)](https://en.wikipedia.org/wiki/Computer-aided_design)
-[Rasterization](https://en.wikipedia.org/wiki/Rasterisation)
-[Euclidean geometry](https://en.wikipedia.org/wiki/Euclidean_geometry)
+[Polygonal Modeling](https://en.wikipedia.org/wiki/Polygonal_modeling) <br/>
+[Non-uniform Rational B-spline Surfaces](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline) <br/>
+[Computer Aided Design (CAD)](https://en.wikipedia.org/wiki/Computer-aided_design) <br/>
+[Rasterization](https://en.wikipedia.org/wiki/Rasterisation) <br/>
+[Euclidean geometry](https://en.wikipedia.org/wiki/Euclidean_geometry) <br/>
 </Note>
 
 <Note title="Youtube", type="resource">
 
-[Miolith --- Quick Understanding of Homogeneous Coordinates for Computer Graphics](https://www.youtube.com/watch?v=o-xwmTODTUI)
-[Leios Labs ---  What are affine transformations?](https://www.youtube.com/watch?v=E3Phj6J287o)
-[3Blue1Brown --- Essence of linear algebra (highly recommended playlist)](https://www.youtube.com/watch?v=fNk_zzaMoSs&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab)
-[3Blue1Brown --- Quaternions and 3d rotation, explained interactively](https://www.youtube.com/watch?v=zjMuIxRvygQ)
-[pikuma --- Math for Game Developers (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-93QtJmGnQcJRdiqMBEwZ7_)
-[pikuma --- 3D Graphics (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-97qGEeOWnxZBqvR_zwjWoo)
-[Cem Yuksel --- Introduction to Computer Graphics (playlist)](https://www.youtube.com/watch?v=vLSphLtKQ0o&list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh)
-[Cem Yuksel --- Interactive Computer Graphics (playlist)](https://www.youtube.com/watch?v=UVCuWQV_-Es&list=PLplnkTzzqsZS3R5DjmCQsqupu43oS9CFN&pp=0gcJCV8EOCosWNin)
-[javidx9 --- Essential Mathematics For Aspiring Game Developers](https://www.youtube.com/watch?v=DPfxjQ6sqrc)
+[Miolith --- Quick Understanding of Homogeneous Coordinates for Computer Graphics](https://www.youtube.com/watch?v=o-xwmTODTUI) <br/>
+[Leios Labs ---  What are affine transformations?](https://www.youtube.com/watch?v=E3Phj6J287o) <br/>
+[3Blue1Brown --- Essence of linear algebra (highly recommended playlist)](https://www.youtube.com/watch?v=fNk_zzaMoSs&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) <br/>
+[3Blue1Brown --- Quaternions and 3d rotation, explained interactively](https://www.youtube.com/watch?v=zjMuIxRvygQ) <br/>
+[pikuma --- Math for Game Developers (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-93QtJmGnQcJRdiqMBEwZ7_) <br/>
+[pikuma --- 3D Graphics (playlist)](https://www.youtube.com/watch?v=Do_vEjd6gF0&list=PLYnrabpSIM-97qGEeOWnxZBqvR_zwjWoo) <br/>
+[Cem Yuksel --- Introduction to Computer Graphics (playlist)](https://www.youtube.com/watch?v=vLSphLtKQ0o&list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh) <br/>
+[Cem Yuksel --- Interactive Computer Graphics (playlist)](https://www.youtube.com/watch?v=UVCuWQV_-Es&list=PLplnkTzzqsZS3R5DjmCQsqupu43oS9CFN&pp=0gcJCV8EOCosWNin) <br/>
+[javidx9 --- Essential Mathematics For Aspiring Game Developers](https://www.youtube.com/watch?v=DPfxjQ6sqrc) <br/>
 </Note>
 
 <Note title="Articles", type="resource">
 
-[Stackoverflow --- Why do 3D engines primarily use triangles to draw surfaces?](https://stackoverflow.com/questions/6100528/why-do-3d-engines-primarily-use-triangles-to-draw-surfaces)
-[The ryg blog --- The barycentric conspiracy](https://fgiesen.wordpress.com/2013/02/06/the-barycentric-conspirac/)
-[Juan Pineda --- A Parallel Algorithm for Polygon Rasterization](https://www.cs.drexel.edu/~deb39/Classes/Papers/comp175-06-pineda.pdf)
-[Kristoffer Dyrkorn --- A fast and precise triangle rasterizer](https://kristoffer-dyrkorn.github.io/triangle-rasterizer/)
-[Microsoft --- Rasterization Rules](https://learn.microsoft.com/en-us/windows/win32/direct3d11/d3d10-graphics-programming-guide-rasterizer-stage-rules)
+[Stackoverflow --- Why do 3D engines primarily use triangles to draw surfaces?](https://stackoverflow.com/questions/6100528/why-do-3d-engines-primarily-use-triangles-to-draw-surfaces) <br/>
+[The ryg blog --- The barycentric conspiracy](https://fgiesen.wordpress.com/2013/02/06/the-barycentric-conspirac/) <br/>
+[Juan Pineda --- A Parallel Algorithm for Polygon Rasterization](https://www.cs.drexel.edu/~deb39/Classes/Papers/comp175-06-pineda.pdf) <br/>
+[Kristoffer Dyrkorn --- A fast and precise triangle rasterizer](https://kristoffer-dyrkorn.github.io/triangle-rasterizer/) <br/>
+[Microsoft --- Rasterization Rules](https://learn.microsoft.com/en-us/windows/win32/direct3d11/d3d10-graphics-programming-guide-rasterizer-stage-rules) <br/>
 </Note>
 
 <Note title="Documentations", type="resource">
 
-[Vulkan Docs --- Drawing](https://docs.vulkan.org/spec/latest/chapters/drawing.html)
-[Vulkan Docs --- Pipeline Diagram](https://docs.vulkan.org/spec/latest/_images/pipelinemesh.svg)
+[Vulkan Docs --- Drawing](https://docs.vulkan.org/spec/latest/chapters/drawing.html) <br/>
+[Vulkan Docs --- Pipeline Diagram](https://docs.vulkan.org/spec/latest/_images/pipelinemesh.svg) <br/>
 </Note>

@@ -37,7 +37,7 @@ h2 {
 }
 
 a {
-	display: block;
+	display: inline-block;
 	text-decoration: none;
 	color: #83a598;
 }
