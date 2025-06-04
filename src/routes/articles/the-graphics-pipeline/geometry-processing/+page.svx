@@ -324,10 +324,10 @@ Which allows **vertex reuse** and reduces memory usage by preventing duplicate v
 Imagine the following scenario:
 ```cc
 float triangle_vertices[] = {
- // x__,  y__, z__
-    0.0,  0.5, 0.0, // center top
-   -0.5, -0.5, 0.0, // bottom left
-    0.5, -0.5, 0.0, // bottom right
+ // x__,  y__
+    0.0,  0.5, // center top
+   -0.5, -0.5, // bottom left
+    0.5, -0.5, // bottom right
 };
 ```
 
@@ -335,16 +335,16 @@ Here we have one triangle primitive, cool! Now let's create a rectangle:
 ```cc
 float vertices[] = {
   // first triangle
-  // x__   y__  z__
-     0.5,  0.5, 0.0, // top right
-     0.5, -0.5, 0.0, // bottom right << DUPLICATE
-    -0.5,  0.5, 0.0, // top left << DUPLICATE
+  // x__   y__
+     0.5,  0.5, // top right
+     0.5, -0.5, // bottom right << DUPLICATE
+    -0.5,  0.5, // top left << DUPLICATE
 
   // second triangle
-  // x__   y__  z__
-     0.5, -0.5, 0.0, // bottom right << DUPLICATE
-    -0.5, -0.5, 0.0, // bottom left
-    -0.5,  0.5, 0.0, // top left << DUPLICATE
+  // x__   y__
+     0.5, -0.5, // bottom right << DUPLICATE
+    -0.5, -0.5, // bottom left
+    -0.5,  0.5, // top left << DUPLICATE
 }; 
 ```
 
@@ -356,11 +356,11 @@ indexed rendering:
 ```cc
 float vertices[] = {
   // first triangle
-  // x__   y__  z__
-     0.5,  0.5, 0.0, // top right
-     0.5, -0.5, 0.0, // bottom right
-    -0.5, -0.5, 0.0, // bottom left
-    -0.5,  0.5, 0.0, // top left
+  // x__   y__
+     0.5,  0.5, // top right
+     0.5, -0.5, // bottom right
+    -0.5, -0.5, // bottom left
+    -0.5,  0.5, // top left
 };
 
 unsigned int indices[] = {
@@ -389,7 +389,7 @@ I'll explain how vertices are transformed soon, don't worry (yet).
 ## **Input Assembler**
 Alrighty! Do we have everything we need?
 
-We got our **vertices** to represent geometry. We set our **primitive topology** to determine
+We got our surface representation---**vertices**. We set the **primitive topology** to determine
 how to concatenate them. And we optionally (but most certainly) provided some **indices** to avoid
 duplicate vertex data.
 
@@ -398,28 +398,60 @@ the **input assembler**. Which as stated before, is responsible for **assembling
 
 <Note type="diagram", title="Geometry Processing">
 
+[Vertex/Index Data] --> Input Assembler --> ...
 
 </Note>
 
+So what comes next?
 
 ## Coordinate System -- Overview
-We got our surface representation (vertices), we got our indices, we set the primitive topology type, and we gave these
-to the **input assembler** to spit out triangles for us.
-
 **Assembling primitives** is the **first** essential task in the **geometry processing** stage, and 
 everything you read so far only went over that part.
 Its **second** vital responsibility is the **transformation** of the said primitives. Let me explain.
 
-So far, all the examples show the geometry in NDC (Normalized Device Coordinates). 
-This is because the **rasterizer** expects the final vertex coordinates to be in the NDC range.
-Anything outside of this range is **clipped** henceforth not visible.
+So far, our examples show the geometry in **normalized device coordinates**; or **NDC** for short.
+This is a small space where the x, y and z values are in range of [-1.0 -> 1.0].
+Anything outside this range will be **clipped** and won't be visible on screen. 
+Below is our old triangle again which was specified within **NDC**---ignoring the z for now:
 
-Yet, as you'll understand soon, doing everything in the **NDC** is inconvenient and very limiting.
-What we'd like to do is to transform these vertices through 5 different coordinate systems before ending up in NDC
-(or outside of if they're meant to be clipped).
-The purpose of each space will be explained shortly. But doing these **transformations** require
-a lot of **linear algebra**, specifically **matrix operations**.
-So let's get some refresher on the concepts
+```cc
+float triangle_vertices[] = {
+ // x__,  y__
+    0.0,  0.5, // center top
+   -0.5, -0.5, // bottom left
+    0.5, -0.5, // bottom right
+};
+```
+
+This is because the **rasterizer** expects the **final vertex coordinates** to be in the **NDC** range.
+Anything outside of this range is, again, **clipped** and not visible.
+
+Yet, as you might imagine, doing everything in the **NDC** is inconvenient and very limiting.
+We'd like to be able to **compose** a scene by <Tip text="transforming">Scale, Rotate, Translate. </Tip> some objects around. And **interact**
+with the scene by moving and looking around ourselves.
+
+This is done by transforming these vertices through **5 coordinate systems** before ending up in NDC
+(or outside of if they're meant to be clipped). Let's get a coarse overview:
+
+**Local Space**: This is where your object begins in, think of it as the data exported from a model
+using Blender. If we were to modify an object it would make most sense to do it here.
+
+**World Space**: All objects will be stuck into each other at coordinates 0, 0, 0 if we don't move them
+around the world. This is the transformation that puts your object in the context of the **world**.
+
+**View Space**: Then we transform everything that was relative to the world in such a way that each
+vertex is seen from the viewer's point of view.
+
+**Clip Space**: Then we project everything to the clip coordinates, which is in the range of -1.0 and 1.0.
+This projection is what makes **perspective** possible (distant objects appearing smaller).
+
+**Screen Space**: This one is out of our control, it simply puts our now normalized coordinates
+unto the screen.
+
+As you can see each of these coordinates systems serve a specific purpose and allows **composition** and **interaction** with a scene.
+However, doing these **transformations** require a lot of **linear algebra**, specifically **matrix operations**.
+So before we get into more depth about coordinate systems, let's learn how to do **linear transformations**!
+
 
 <Note title="Algebra  Ahead!">
 
