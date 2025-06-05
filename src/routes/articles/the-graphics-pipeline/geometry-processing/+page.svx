@@ -11,30 +11,30 @@ import Tip from "../../Tip.svelte"
 
 Ever wondered how games put all that gore on your display? All that beauty is brought into life by
 a process called **rendering**, and at the heart of it, is the **graphics pipeline**.
-In this article we'll dive deep into the intricate details of this powerful beast.
 
-We'll cover all the terminologies needed to understand each stage and have many restatements so don't
-worry if you don't fully grasp something at first. If you still had questions, feel free to contact me :)
+In this article, we'll dive deeply into the intricate details of this powerful beast.
+Don't worry if things don't click right away---we’ll go over all the key terms and restate the important stuff to help it sink in.
+And hey, if you still have questions, feel free to reach out :)
 
-My initial goal of putting everything in **1 article** proved to hurt the **brevity** and the **structure** of content.
-Afterall, the **graphics pipeline** is incredibly **complex** and have gone through quite some **evolution**.
-This impelled me split the concepts into an **article series** consisting of **4 parts**, which would allow me to explain everything in sufficient depth.
-But why exactly **4 parts**?
+Initially, I tried cramming everything in **one article**, which hurt the **brevity** and the **structure**.
+The **graphics pipeline** is a beast---incredibly **complex** and constantly **evolving**.
+So I split it into a **4-part series**, which lets me go into sufficient depth.
+But why exactly **4-parts**?
 
 ## Overview
 
-Like any pipeline, the **graphics pipeline** is comprised 
-of several **stages**, each of which can be a pipeline in itself or even parallelized.
+Like any pipeline, the **graphics pipeline** is made up of several **stages**, 
+each of which can be a mini-pipeline in itself or even parallelized.
 Each stage takes some input (data and configuration) to generate some output data for the next stage.
 
-<Note title="A coarse division of the graphics pipeline", type="diagram">
+<Note title="High level breakdown of the graphics pipeline", type="diagram">
 
 Application --> **Geometry Processing** --> Rasterization --> Pixel Processing --> Presentation
 </Note>
 
 Before the heavy rendering work starts on the <Tip text="GPU">Graphics Processing Unit</Tip>,
 we simulate and update the world through **systems** such as physics engine, game logic, networking, etc.
-during the **application** stage.
+all in the **application** stage.
 This stage is mostly ran on the <Tip text="CPU">Central Processing Unit</Tip>, 
 therefore it is extremely efficient on executing <Tip text="sequentially dependent logic">
 A type of execution flow where the operations depend on the results of previous steps, limiting parallel execution.
@@ -49,14 +49,12 @@ We'll cover this stage in depth very soon so don't panic (yet).
 Afterwards, the final geometric data are converted into <Tip text="pixels"> Pixel is the shorthand for **picture-element**, Voxel is the shorthand for **volumetric-element**. </Tip>
 and prepped for the **pixel processing** stage via a process called **rasterization**.
 In other words, this stage converts a rather abstract and internal presentation (geometry)
-into something more concrete (pixels). It's called rasterization because end the product is a <Tip text="raster">Noun. A rectangular pattern of parallel scanning lines followed by the electron beam on a television screen or computer monitor. -- 1930s: from German Raster, literally ‘screen’, from Latin rastrum ‘rake’, from ras- ‘scraped’, from the verb radere. ---Oxford Languages</Tip> of pixels.
+into something more concrete (pixels). It's called rasterization because end the product is a <Tip text="raster">Noun. A rectangular pattern of parallel scanning lines followed by the electron beam on a television screen or computer monitor. -- 1930s: from German Raster, literally ‘screen’, from Latin rastrum ‘rake’, from ras- ‘scraped’, from the verb radere. ---Oxford Languages</Tip> 
+(a grid) of pixels.
 
-The **pixel processing** stage then uses the rasterized geometry data (pixel data) to do **lighting**, **texturing**, 
-and all the sweet gory details of a scene (like a murder scene). 
-This stage is often, but not always, the most computationally expensive. 
-A huge problem that a good rendering engine needs to solve is how to be **performant**. And a great deal
-of **optimization** can be done through **culling** the work that we can deem unnecessary/redundant in each
-stage before it's passed on to the next. More on **culling** later so don't worry (yet :D).
+The **pixel processing** stage then uses the rasterized geometry data (pixel data) to do
+**lighting**, **texturing**, **shadow-mapping**, and all the sweet gory details of a scene (like a murder scene). 
+In short, this stage is responsible for calculating the **final output color** of each pixel.
 
 The pipeline will then serve (present) the output of the **pixel processing** stage, which is a **rendered image**,
 to your pretty eyes using your <Tip text="display">Usually a monitor but the technical term for it is
@@ -74,7 +72,7 @@ the target **surface**. Which can be anything like a VR headset or some other cr
 
 </Note>
 
-I hope it is now evident why I chose to split the concepts through 4 parts. So... let's jump right into the gory details of the **geometry processing**
+I hope it is now evident why I chose to split the concepts in 4-parts. So... let's jump right into the gory details of the **geometry processing**
 stage!
 
 
@@ -185,11 +183,11 @@ triangles.
 So, we got our set of vertices, but having a bunch of points floating around wouldn't make a scene very lively
 (or gory), we need to form **triangles** out of them to compose **models** (like our beautiful corpse).
 
-**Input assembler** is the stage responsible for **concatenating** our vertices (the input) to assemble **primitives**.
+The **input assembler** is first the mini-stage in the **geometry processing** stage. And it's responsible for **concatenating** our vertices (the input) to assemble **primitives**.
 It is a **fixed function** stage so we can only configure it (it's not programmable).
 We can tell the assembler how it should interpret the vertex data by configuring its **primitive** <Tip text="toplogy"> The way in which constituent parts are interrelated or arranged.--mid 19th century: via German from Greek topos ‘place’ + -logy.---Oxford Languages </Tip>.
 
-Instead of explaining with words, I'm going to show you how each type of topology works with pictures. Buckle up!
+Instead of explaining with words, I'm going to show you how each type of topology works with pictures. So buckle up!
 
 When the topology is **point list**, each **consecutive vertex** (v) defines a **single point** primitive (p)
 and the number of primitives (n of p) is equals to the number of vertices (n of v).
@@ -349,18 +347,18 @@ float vertices[] = {
 ```
 
 As indicated by the comments, we have two **identical** vertices. This situation only gets worse 
-for each additional attribute per vertex (yep, vertices pack a lot more information than positions, you'll understand soon).
-And in a large model with hundreds of thousands of triangles, it becomes unacceptable. Hence we use
-indexed rendering:
+for each additional **attribute** per vertex (vertices pack a lot more information than positions, we'll get to it later).
+And in a large model with hundreds of thousands of triangles, it becomes unacceptable. To remedy this problem, we do
+**indexed rendering**:
 
 ```cc
 float vertices[] = {
   // first triangle
   // x__   y__
-     0.5,  0.5, // top right
-     0.5, -0.5, // bottom right
-    -0.5, -0.5, // bottom left
-    -0.5,  0.5, // top left
+     0.5,  0.5, // top right    [0]
+     0.5, -0.5, // bottom right [1]
+    -0.5, -0.5, // bottom left  [2]
+    -0.5,  0.5, // top left     [3]
 };
 
 unsigned int indices[] = {
@@ -370,8 +368,8 @@ unsigned int indices[] = {
 ```
 
 And you might be asking, what about **triangle strips** we just talked about? Well, if you try to visualize it,
-a large model cannot possibly be made from a single strip of triangles, but from many. And we might not even use
-triangle strips (we might use triangle lists).
+a **large model** cannot possibly be made from a **single strip** of triangles, but from **many**. And we might not even use
+triangle **strips**---we might use triangle **lists**.
 
 Either way, using indices is optional but almost always a good idea to use them!
 
@@ -391,9 +389,9 @@ Alrighty! Do we have everything we need?
 
 We got our surface representation---**vertices**. We set the **primitive topology** to determine
 how to concatenate them. And we optionally (but most certainly) provided some **indices** to avoid
-duplicate vertex data.
+duplication.
 
-All this data (and configuration) is then fed to the very first stage of the **graphics pipeline** called
+All this data (and configuration) is then fed to the very first mini-stage of the **graphics pipeline** called
 the **input assembler**. Which as stated before, is responsible for **assembling** primitives from our **input** (vertices and indices).
 
 <Note type="diagram", title="Geometry Processing">
@@ -427,14 +425,15 @@ This is because the **rasterizer** expects the **final vertex coordinates** to b
 Anything outside of this range is, again, **clipped** and not visible.
 
 Yet, as you might imagine, doing everything in the **NDC** is inconvenient and very limiting.
-We'd like to be able to **compose** a scene by <Tip text="transforming">Scale, Rotate, Translate. </Tip> some objects around. And **interact**
-with the scene by moving and looking around ourselves.
+We'd like to **compose** a scene by <Tip text="transforming">Scale, Rotate, Translate. </Tip> some objects around, **interact**
+with the scene by moving and looking around, and express coordinates in arbitrary 
+units---such as meters.
 
 This is done by transforming these vertices through **5 coordinate systems** before ending up in NDC
-(or outside of if they're meant to be clipped). Let's get a coarse overview:
+(or outside of if they're meant to be clipped). Here's a high-level overview:
 
-**Local Space**: This is where your object begins in, think of it as the data exported from a model
-using Blender. If we were to modify an object it would make most sense to do it here.
+**Local Space**: This is where your model begins in, think of it as the data exported from a model
+using Blender. If we were to modify a model (the model's vertices itself, not its transformation) it would make most sense to do it here.
 
 **World Space**: All objects will be stuck into each other at coordinates 0, 0, 0 if we don't move them
 around the world. This is the transformation that puts your object in the context of the **world**.
@@ -449,11 +448,11 @@ This projection is what makes **perspective** possible (distant objects appearin
 unto the screen.
 
 As you can see each of these coordinates systems serve a specific purpose and allows **composition** and **interaction** with a scene.
-However, doing these **transformations** require a lot of **linear algebra**, specifically **matrix operations**.
-So before we get into more depth about coordinate systems, let's learn how to do **linear transformations**!
+However, doing these **transformations** require a lot of **linear algebra**, specially a ton of **matrix operations**.
+So, before we get into more depth about these coordinate systems, let's learn how to do **linear transformations** using **linear algebra**!
 
 
-<Note title="Algebra  Ahead!">
+<Note title="Mathematics Ahead!">
 
 The concepts in the following sections may be difficult to grasp at first. And **that's okay**, you don't
 need to pickup everything the first time you read them (I didn't). If you feel passionate about these topics
@@ -462,9 +461,22 @@ your time** :)
 
 </Note>
 
-## Linear Algebra --- Vector Operations
+## Linear Algebra --- Vectors
 
-** What is a vector**
+**Vectors** are the **fundamental** building blocks of the linear algebra. And we're going to get
+really familiar with them :) But what is a **vector** anyways? As all things in life, it depends.
+
+For a **physicist**, vectors are **arrows pointing in space**, and what defines them is their **length** (or **magnitude**)
+and **direction**---that is, any two vectors moved to different **origins** (starting points) are the **same vectors**,
+as long as their **length** and **direction** remain the same:
+
+For a **computer scientist**, vectors are a fancy word for **ordered lists of numbers**. Yep, that's it, it feels good
+to be in the simple world of a computer scientist:
+
+But for a **mathematician**, vectors are a lot more **abstract**.
+Virtually **any** representation of **vectors** (which is called a **vector-space**) is valid as long as they follow a set of **axioms**. 
+It doesn't matter if you think of them as **arrows in space** that happen to have a **numeric representation**,
+or as a **list of numbers** that happen to have a cute **geometric interpretation**. 
 
 **Additions and Subtraction**
 
@@ -480,7 +492,15 @@ your time** :)
 
 **Normalization and the normal vector**
 
-## Linear Algebra --- Matrix Operations
+<Note title="The Essence of Linear Algebra">
+
+If you're interested in **mathematics** (bet you are) and **visualization**, then I highly recommend watching the [Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) 
+by **3Blue1Brown**. His math series has great intuitive explanations using smooth visuals.
+And much of my own understanding comes from this series---and the other sources references at the end.
+
+</Note>
+
+## Linear Algebra --- Matrices
 
 ** What is a matrix**
 
@@ -767,6 +787,8 @@ Some LLMs
 [Computer Aided Design (CAD)](https://en.wikipedia.org/wiki/Computer-aided_design) <br/>
 [Rasterization](https://en.wikipedia.org/wiki/Rasterisation) <br/>
 [Euclidean geometry](https://en.wikipedia.org/wiki/Euclidean_geometry) <br/>
+[Vector space](https://en.wikipedia.org/wiki/Vector_space) <br/>
+
 </Note>
 
 <Note title="Youtube", type="resource">
