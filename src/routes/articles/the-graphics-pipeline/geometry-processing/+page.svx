@@ -470,17 +470,42 @@ For a **physicist**, vectors are **arrows pointing in space**, and what defines 
 and **direction**---that is, any two vectors moved to different **origins** (starting points) are the **same vectors**,
 as long as their **length** and **direction** remain the same:
 
+<Note type="image", title="Physicist">
+
+**Insert Image Here**
+
+</Note>
+
 For a **computer scientist**, vectors are a fancy word for **ordered lists of numbers**. Yep, that's it, it feels good
 to be in the simple world of a computer scientist:
 
-But for a **mathematician**, vectors are a lot more **abstract**.
+<Note type="image", title="Computer Scientist">
+
+**Insert Image Here**
+
+</Note>
+
+But **mathematically** speaking, vectors are a lot more **abstract**.
 Virtually **any** representation of **vectors** (which is called a **vector-space**) is valid as long as they follow a set of **axioms**. 
 It doesn't matter if you think of them as **arrows in space** that happen to have a **numeric representation**,
-or as a **list of numbers** that happen to have a cute **geometric interpretation**. 
+or as a **list of numbers** that happen to have a cute **geometric interpretation** (or even certain mathmatical **functions**). 
+As long the [aximos of vector spaces](https://www.math.ucla.edu/~tao/resource/general/121.1.00s/vector_axioms.html) apply to them, they're vectors.
 
-**Additions and Subtraction**
+However, we won't go into such axioms as we're not interested in **abstract** thinking here.
+We're aiming to do something **concrete** called **linear transformations** of a set of vertices (models). 
+So it would be ideal for us to think of them like this:
 
-**Division and Multiplication**
+- A vector describes a series of steps to perform a **transformation** in space.
+- A vector has the properties: **direction** and **magntitude**.
+- If its **magntitude** is exactly **1**, then it describes a **direction** in space and is called a **unit vector**.
+
+Let's go over these points one by one.
+
+**Basis Vector**
+
+**Additions**
+
+**Multiplication**
 
 **Scalar Operations**
 
@@ -548,7 +573,7 @@ Why are we using 4D matrixes for vertices that are three dimensional?
 **Embedding it all in one matrix**
 
 Great! You've refreshed on lots of cool mathematics today, let's get back to the original discussion.
-**Transforming** the freshly generated **primitives** through this **five** mysterious primary coordinates systems (or spaces),
+**Transforming** the freshly generated **primitives** through this **five** mysterious coordinates systems (or spaces),
 starting with the **local space**!
 
 ## Coordinate System -- Local Space
@@ -811,6 +836,7 @@ Some LLMs
 [Juan Pineda --- A Parallel Algorithm for Polygon Rasterization](https://www.cs.drexel.edu/~deb39/Classes/Papers/comp175-06-pineda.pdf) <br/>
 [Kristoffer Dyrkorn --- A fast and precise triangle rasterizer](https://kristoffer-dyrkorn.github.io/triangle-rasterizer/) <br/>
 [Microsoft --- Rasterization Rules](https://learn.microsoft.com/en-us/windows/win32/direct3d11/d3d10-graphics-programming-guide-rasterizer-stage-rules) <br/>
+[Axioms of vector spaces](https://www.math.ucla.edu/~tao/resource/general/121.1.00s/vector_axioms.html)
 </Note>
 
 <Note title="Documentations", type="resource">
