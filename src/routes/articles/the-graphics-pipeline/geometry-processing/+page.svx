@@ -519,8 +519,11 @@ Let's go over these points one by one.
 
 <Note title="The Essence of Linear Algebra">
 
-If you're interested in **mathematics** (bet you are) and **visualization**, then I highly recommend watching the [Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) 
-by **3Blue1Brown**. His math series has great intuitive explanations using smooth visuals.
+A **visual** and very **intuitive** explaination of these concepts is beyond the scope of this article.
+If you're interested in **mathematics** (bet you are) and **visualization**,
+then I highly recommend watching the [Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) 
+by **3Blue1Brown**.
+His math series can give you a great intuitive understanding using very smooth visuals.
 And much of my own understanding comes from this series---and the other sources references at the end.
 
 </Note>
