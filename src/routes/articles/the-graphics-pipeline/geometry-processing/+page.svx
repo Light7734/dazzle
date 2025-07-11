@@ -7,6 +7,8 @@ date: "April 20 - 2025"
 import Image from "../../Image.svelte"
 import Note from "../../Note.svelte"
 import Tip from "../../Tip.svelte"
+
+let i, red,j,green;
 </script>
 
 Ever wondered how games put all that gore on your display? All that beauty is brought into life by
@@ -439,10 +441,10 @@ using Blender. If we were to modify a model (the model's vertices itself, not it
 around the world. This is the transformation that puts your object in the context of the **world**.
 
 **View Space**: Then we transform everything that was relative to the world in such a way that each
-vertex is seen from the viewer's point of view.
+vertex is seen from the viewer's point of **view**.
 
-**Clip Space**: Then we project everything to the clip coordinates, which is in the range of -1.0 and 1.0.
-This projection is what makes **perspective** possible (distant objects appearing smaller).
+**Clip Space**: Then we **project** everything to the clip coordinates, which is in the range of -1.0 and 1.0.
+This **projection** is what makes **perspective** possible (distant objects appearing smaller).
 
 **Screen Space**: This one is out of our control, it simply puts our now normalized coordinates
 unto the screen.
@@ -513,7 +515,29 @@ Let's go over these points one by one.
 
 **Dot Product**
 
-**Length**
+The **length** of the vector isn't the only thing we can get from **trigonometry**. We can also
+**compare** the **directions** of two vectors. But this needs a bit of explaination.
+
+Imagine two vectors: the $\color{red}\hat{i}$ and the $\color{green}\hat{j}$
+
+
+
+Let's discuss **scalar** operations. A **scalar** is a number that **scales** the vector by itself.
+Most often we're only interested in doing **multiplication** (denoted by $\cdot$ symbol). Yet the other 3 operatoins (/, +, -) are also defined
+for **scalars**. Here are two examples:
+
+<Note type="math", title="Scalar operations">
+
+Multiplication:
+```math
+\begin{pmatrix} \color{red}1 \\ \color{green}2 \\ \color{blue}3 \end{pmatrix} \cdot x \rightarrow \begin{pmatrix} \color{red}1 \\ \color{green}2 \\ \color{blue}3 \end{pmatrix} \cdot \begin{pmatrix} x \\ x \\ x \end{pmatrix}  = \begin{pmatrix} \color{red}1 \cdot x \\ \color{green}2 \cdot x \\ \color{blue}3 \cdot x \end{pmatrix}\\
+```
+
+Subtraction
+```math
+\begin{pmatrix} \color{red}69 \\ \color{green}420 \\ \color{blue}85 \end{pmatrix} - x \rightarrow \begin{pmatrix} \color{red}69 \\ \color{green}420 \\ \color{blue}85 \end{pmatrix} - \begin{pmatrix} x \\ x \\ x \end{pmatrix}  = \begin{pmatrix} \color{red}69 - x \\ \color{green}420 - x \\ \color{blue}85 - x \end{pmatrix}
+```
+</Note>
 
 **Normalization and the normal vector**
 
