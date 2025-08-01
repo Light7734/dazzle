@@ -1,75 +1,106 @@
 <script lang="ts">
 	import { Info, BookCopy, Eye, Network, Sigma, Image, Quote } from '@lucide/svelte';
-	let { title = '', type = 'info' } = $props();
+	let { title = '', type = 'info', flow = false } = $props();
 </script>
 
-<div class="note">
+<div>
+{#if type == 'none'}
+<div class="note_no_margin">
 	<div class="head">
-		<div class="icon">
-			{#if type == 'info'}
-				<Info />
-			{:else if type == 'image'}
-				<Image />
-			{:else if type == 'diagram'}
-				<Network />
-			{:else if type == 'quote'}
-				<Quote />
-			{:else if type == 'math'}
-				<Sigma />
-			{:else if type == 'review'}
-				<Eye />
-			{:else if type == 'resource'}
-				<BookCopy />
-			{/if}
-		</div>
+		{#if type != 'none'}
+			<div class="icon">
+				{#if type == 'info'}
+					<Info />
+				{:else if type == 'image'}
+					<Image />
+				{:else if type == 'diagram'}
+					<Network />
+				{:else if type == 'quote'}
+					<Quote />
+				{:else if type == 'math'}
+					<Sigma />
+				{:else if type == 'review'}
+					<Eye />
+				{:else if type == 'resource'}
+					<BookCopy />
+				{/if}
+			</div>
+		{/if}
 
-		{#if type == 'info'}
-			<div class="horiz_line" style:background-color="#8ec07c"></div>
-		{:else if type == 'diagram'}
-			<div class="horiz_line" style:background-color="#d3869b"></div>
-		{:else if type == 'quote'}
-			<div class="horiz_line" style:background-color="#d3869b"></div>
-		{:else if type == 'image'}
-			<div class="horiz_line" style:background-color="#d3869b"></div>
-		{:else if type == 'math'}
-			<div class="horiz_line" style:background-color="#fe8019"></div>
-		{:else if type == 'review'}
-			<div class="horiz_line" style:background-color="#cc241d"></div>
-		{:else if type == 'resource'}
-			<div class="horiz_line" style:background-color="#458588"></div>
+		{#if flow == false}
+			<div class="horiz_line" style:background-color="#fabd2f"></div>
+		{:else if title != ''}
+			<p class="title">{title}</p>
 		{/if}
 	</div>
 
 	<div class="content">
-		{#if type == 'info'}
-			<div class="line" style:background-color="#8ec07c"></div>
-		{:else if type == 'diagram'}
-			<div class="line" style:background-color="#d3869b"></div>
-		{:else if type == 'quote'}
-			<div class="line" style:background-color="#d3869b"></div>
-		{:else if type == 'image'}
-			<div class="line" style:background-color="#d3869b"></div>
-		{:else if type == 'math'}
-			<div class="line" style:background-color="#fe8019"></div>
-		{:else if type == 'review'}
-			<div class="line" style:background-color="#cc241d"></div>
-		{:else if type == 'resource'}
-			<div class="line" style:background-color="#458588"></div>
-		{/if}
+		<div class="line" style:background-color="#fabd2f"></div>
 
 		<div class="slot">
 			{#if title != ''}
-				<p class="title">{title}</p>
+				{#if flow == false}
+					<p>{title}</p>
+				{/if}
 			{/if}
 			<slot />
 		</div>
 	</div>
+</div>
+{:else if type != 'none'}
+<div class="note">
+	<div class="head">
+		{#if type != 'none'}
+			<div class="icon">
+				{#if type == 'info'}
+					<Info />
+				{:else if type == 'image'}
+					<Image />
+				{:else if type == 'diagram'}
+					<Network />
+				{:else if type == 'quote'}
+					<Quote />
+				{:else if type == 'math'}
+					<Sigma />
+				{:else if type == 'review'}
+					<Eye />
+				{:else if type == 'resource'}
+					<BookCopy />
+				{/if}
+			</div>
+		{/if}
+
+		{#if flow == false}
+			<div class="horiz_line" style:background-color="#fabd2f"></div>
+		{:else if title != ''}
+			<p class="title">{title}</p>
+		{/if}
+	</div>
+
+	<div class="content">
+		<div class="line" style:background-color="#fabd2f"></div>
+
+		<div class="slot">
+			{#if title != ''}
+				{#if flow == false}
+					<p>{title}</p>
+				{/if}
+			{/if}
+			<slot />
+		</div>
+	</div>
+</div>
+{/if}
 </div>
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
 
 	.title {
+		margin: 0;
+		margin-left: 1em;
+		margin-top: 4px;
+		font-weight: bolder;
 	}
 
 	.note {
@@ -77,6 +108,12 @@
 		margin: 1em 0 1em 0;
 		border-radius: 2px;
 	}
+
+	.note_no_margin {
+		display: block;
+		border-radius: 2px;
+	}
+
 
 	.head {
 		display: flex;
