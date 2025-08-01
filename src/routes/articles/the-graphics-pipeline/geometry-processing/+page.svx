@@ -1,5 +1,5 @@
 ---
-title: The Graphics Pipeline ; Part 1
+title: The Graphics Pipeline - Part 1
 date: "April 20 - 2025"
 ---
 
@@ -20,7 +20,7 @@ And hey, if you still have questions, feel free to reach out :)
 
 Initially, I tried cramming everything in **one article**, which hurt the **brevity** and the **structure**.
 The **graphics pipeline** is a beast---incredibly **complex** and constantly **evolving**.
-So I split it into a **4-part series**, which lets me go into sufficient depth.
+So I split it into a **4-part series**, which lets me go into sufficient depth for each stage.
 But why exactly **4-parts**?
 
 ## Overview
@@ -185,7 +185,7 @@ triangles.
 So, we got our set of vertices, but having a bunch of points floating around wouldn't make a scene very lively
 (or gory), we need to form **triangles** out of them to compose **models** (like our beautiful corpse).
 
-The **input assembler** is first the mini-stage in the **geometry processing** stage. And it's responsible for **concatenating** our vertices (the input) to assemble **primitives**.
+The **input assembler** is first the (sub)stage in the **geometry processing** stage. And it's responsible for **concatenating** our vertices (the input) to assemble **primitives**.
 It is a **fixed function** stage so we can only configure it (it's not programmable).
 We can tell the assembler how it should interpret the vertex data by configuring its **primitive** <Tip text="toplogy"> The way in which constituent parts are interrelated or arranged.--mid 19th century: via German from Greek topos ‘place’ + -logy.---Oxford Languages </Tip>.
 
@@ -202,7 +202,7 @@ and the number of primitives (n of p) is equals to the number of vertices (n of 
 
 </Note>
 
-<Note type="math">
+<Note type="math" flow=true>
 
 ```math
 \begin{aligned}
@@ -222,7 +222,7 @@ When the topology is **line list**, each **consecutive pair of vertices** define
 
 </Note>
 
-<Note  type="math">
+<Note  type="math" flow=true>
 
 ```math
 \begin{aligned}
@@ -243,7 +243,7 @@ When the primitive topology is **line strip**, **one line** is defined by each *
 </Note>
 
 
-<Note  type="math">
+<Note  type="math" flow=true>
 
 ```math
 \begin{aligned}
@@ -263,7 +263,7 @@ When the primitive topology is **triangle list**, each **consecutive set of thre
 
 </Note>
 
-<Note  type="math">
+<Note  type="math" flow=true>
 
 ```math
 \begin{aligned}
@@ -283,7 +283,7 @@ When the primitive topology is **triangle strip**, **one triangle** is defined b
 
 </Note>
 
-<Note  type="math">
+<Note  type="math" flow=true>
 
 ```math
 \begin{aligned}
@@ -304,7 +304,7 @@ When the primitive topology is **triangle fan**, **triangles** are defined **aro
 
 </Note>
 
-<Note type="math">
+<Note type="math" flow=true>
 
 ```math
 \begin{aligned}
@@ -393,8 +393,8 @@ We got our surface representation---**vertices**. We set the **primitive topolog
 how to concatenate them. And we optionally (but most certainly) provided some **indices** to avoid
 duplication.
 
-All this data (and configuration) is then fed to the very first mini-stage of the **graphics pipeline** called
-the **input assembler**. Which as stated before, is responsible for **assembling** primitives from our **input** (vertices and indices).
+All this data (and configuration) is then fed to the very first (sub)stage of the **graphics pipeline** called
+the **input assembler**. Which as stated before, is responsible for **assembling** primitives from our **input** (vertices and indices)
 
 <Note type="diagram", title="Geometry Processing">
 
@@ -429,7 +429,7 @@ Anything outside of this range is, again, **clipped** and not visible.
 Yet, as you might imagine, doing everything in the **NDC** is inconvenient and very limiting.
 We'd like to **compose** a scene by <Tip text="transforming">Scale, Rotate, Translate. </Tip> some objects around, **interact**
 with the scene by moving and looking around, and express coordinates in arbitrary 
-units---such as meters.
+units such as meters---or yards and inches if you're American.
 
 This is done by transforming these vertices through **5 coordinate systems** before ending up in NDC
 (or outside of if they're meant to be clipped). Here's a high-level overview:
@@ -494,7 +494,7 @@ or as a **list of numbers** that happen to have a cute **geometric interpretatio
 As long the [aximos of vector spaces](https://www.math.ucla.edu/~tao/resource/general/121.1.00s/vector_axioms.html) apply to them, they're vectors.
 
 However, we won't go into such axioms as we're not interested in **abstract** thinking here.
-We're aiming to do something **concrete** called **linear transformations** of a set of vertices (models). 
+We're aiming to do something **concrete** like **linear transformations** of a set of vertices (models). 
 So it would be ideal for us to think of them like this:
 
 - A vector describes a series of steps to perform a **transformation** in space.
@@ -578,7 +578,7 @@ Representing rotations like this makes us prone to a phenomenon called **gimbal 
 an axis of control. A way of avoiding this is to rotate around an arbitary axis (makes it a lot harder
 to happen but still possible).
 
-The ideal way is to use <Tip text="quaternions" >A quaternion is a four-part hyper-complex number used in three-dimensional rotations and orientations.
+The ideal way however, is to use <Tip text="quaternions" >A quaternion is a four-part hyper-complex number used in three-dimensional rotations and orientations.
 A quaternion number is represented in the form a+bi+cj+dk, where a, b, c, and d parts are real numbers, and i, j, and k are the basis elements, satisfying the equation: i2 = j2 = k2 = ijk = −1.</Tip>,
 which not only make gimbal lock impossible but are also more computationally friendly.
 
@@ -586,8 +586,6 @@ A full discussion about quaternions is beyond the scope of this article. However
 I've left links at the end of this article for further study.
 
 </Note>
-
-**Why Translation is not a linear transformation**
 
 **Translation**
 
@@ -618,7 +616,7 @@ And the cube looks plain like this:
 
 </Note>
 
-I hope this one is easy to grasp since **technically** been using it in our initial triangle
+I hope this one is easy to grasp since **technically** we've been using it in our initial triangle
 and square examples already, the local space just happened to be in NDC though that is not necessary.
 
 Say if we arbitrarily consider each 1 unit is 1cm, then a 10m x 10m cube would have the following 
@@ -649,14 +647,14 @@ This transformation is stored in a matrix called the **model matrix**. This is t
 So one down, two more to go!
 
 ## Coordinate system -- View Space
-Alternatively names include: **eye space** or the **camera space**.
+Alternatively called: the **eye space** or the **camera space**.
 
 This is where the crucial element of **interactivity**
 comes to life (well depends if you can move the view in your game or not).
 
 Currently,  we're looking at the world
 through a fixed lens. Since everything that's rendered will be in the [-1.0, 1.0] range, that means
-**moving** our selves or our **eyes** or the game's **camera** doesn't have a real meaning.
+**moving** our selves, (or our **eyes** or, the game's **camera**, however you **look** at it) doesn't have a real meaning.
 
 Now it's you that's stuck! (haha). But don't worry your layz-ass, instead of moving yourself
 (which again would not make sense since everything visible ends up in the NDC), you can move the world! (how entitled).
@@ -825,14 +823,14 @@ Some LLMs
 
 </Note>
 
-<Note title="Books", type="resource">
+<Note title="Books", type="resource" flow=true>
 
 [Joey De Vriez --- LearnOpenGL](https://learnopengl.com/) <br/>
 [Tomas Akenine Moller --- Real-Time Rendering (4th ed)](https://www.realtimerendering.com/intro.html) <br/>
 [Gabriel Gambetta --- Computer Graphics from Scratch](https://gabrielgambetta.com/computer-graphics-from-scratch/) <br/>
 </Note>
 
-<Note title="Wikipedia", type="resource">
+<Note title="Wikipedia", type="resource" flow=true>
 
 [Polygonal Modeling](https://en.wikipedia.org/wiki/Polygonal_modeling) <br/>
 [Non-uniform Rational B-spline Surfaces](https://en.wikipedia.org/wiki/Non-uniform_rational_B-spline) <br/>
@@ -843,7 +841,7 @@ Some LLMs
 
 </Note>
 
-<Note title="Youtube", type="resource">
+<Note title="Youtube", type="resource" flow=true>
 
 [Miolith --- Quick Understanding of Homogeneous Coordinates for Computer Graphics](https://www.youtube.com/watch?v=o-xwmTODTUI) <br/>
 [Leios Labs ---  What are affine transformations?](https://www.youtube.com/watch?v=E3Phj6J287o) <br/>
@@ -856,7 +854,7 @@ Some LLMs
 [javidx9 --- Essential Mathematics For Aspiring Game Developers](https://www.youtube.com/watch?v=DPfxjQ6sqrc) <br/>
 </Note>
 
-<Note title="Articles", type="resource">
+<Note title="Articles", type="resource" flow=true>
 
 [Stackoverflow --- Why do 3D engines primarily use triangles to draw surfaces?](https://stackoverflow.com/questions/6100528/why-do-3d-engines-primarily-use-triangles-to-draw-surfaces) <br/>
 [The ryg blog --- The barycentric conspiracy](https://fgiesen.wordpress.com/2013/02/06/the-barycentric-conspirac/) <br/>
@@ -866,7 +864,7 @@ Some LLMs
 [Axioms of vector spaces](https://www.math.ucla.edu/~tao/resource/general/121.1.00s/vector_axioms.html)
 </Note>
 
-<Note title="Documentations", type="resource">
+<Note title="Documentations", type="resource" flow=true>
 
 [Vulkan Docs --- Drawing](https://docs.vulkan.org/spec/latest/chapters/drawing.html) <br/>
 [Vulkan Docs --- Pipeline Diagram](https://docs.vulkan.org/spec/latest/_images/pipelinemesh.svg) <br/>
