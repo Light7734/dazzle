@@ -8,7 +8,10 @@ import Image from "../../Image.svelte"
 import Note from "../../Note.svelte"
 import Tip from "../../Tip.svelte"
 
-let i, red,j,green;
+let a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z;
+let A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z;
+let red, green, yellow, blue, purple, cyan, orange, black, white, gray, color;
+
 </script>
 
 Ever wondered how games put all that gore on your display? All that beauty is brought into life by
@@ -27,7 +30,7 @@ But why exactly **4-parts**?
 
 Like any pipeline, the **graphics pipeline** is made up of several **stages**, 
 each of which can be a mini-pipeline in itself or even parallelized.
-Each stage takes some input (data and configuration) to generate some output data for the next stage.
+Each stage takes some **input** (data and configuration) to generate some **output** data for the next stage.
 
 <Note title="High level breakdown of the graphics pipeline", type="diagram">
 
@@ -465,7 +468,7 @@ your time** :)
 
 ## Linear Algebra --- Vectors
 
-**Vectors** are the **fundamental** building blocks of the linear algebra. And we're going to get
+**Vectors** are the **fundamental** building blocks of **linear algebra**. And we're going to get
 really familiar with them :) But what is a **vector** anyways? As all things in life, it depends.
 
 For a **physicist**, vectors are **arrows pointing in space**, and what defines them is their **length** (or **magnitude**)
@@ -490,37 +493,113 @@ to be in the simple world of a computer scientist:
 But **mathematically** speaking, vectors are a lot more **abstract**.
 Virtually **any** representation of **vectors** (which is called a **vector-space**) is valid as long as they follow a set of **axioms**. 
 It doesn't matter if you think of them as **arrows in space** that happen to have a **numeric representation**,
-or as a **list of numbers** that happen to have a cute **geometric interpretation** (or even certain mathmatical **functions**). 
-As long the [aximos of vector spaces](https://www.math.ucla.edu/~tao/resource/general/121.1.00s/vector_axioms.html) apply to them, they're vectors.
+or as a **list of numbers** that happen to have a cute **geometric interpretation**. 
+As long the <Tip text="axioms of vector spaces"> <p>A **real vector space** is a set X with a special element 0, and three operations
 
-However, we won't go into such axioms as we're not interested in **abstract** thinking here.
-We're aiming to do something **concrete** like **linear transformations** of a set of vertices (models). 
+- **Addition**: Given two elements x, y in X, one can form the sum x+y, which is also an element of X.
+
+- **Inverse**: Given an element x in X, one can form the inverse -x, which is also an element of X.
+
+- **Scalar multiplication**: Given an element x in X and a real number c, one can form the product cx, which is also an element of X.
+
+These operations must satisfy the following axioms: 
+
+* **Additive axioms**. For every x,y,z in X, we have
+    - x+y = y+x.
+    - (x+y)+z = x+(y+z).
+    - 0+x = x+0 = x.
+    - (-x) + x = x + (-x) = 0.
+
+* **Multiplicative axioms**. For every x in X and real numbers c,d, we have
+    - 0x = 0
+    - 1x = x
+    - (cd)x = c(dx)
+
+* **Distributive axioms**. For every x,y in X and real numbers c,d, we have
+    - c(x+y) = cx + cy.
+    - (c+d)x = cx +dx.      
+
+
+[source](https://www.math.ucla.edu/~tao/resource/general/121.1.00s/vector_axioms.html)
+
+</Tip> apply to them, they're vectors.
+
+<Note type="math", title="Mathmatician">
+
+<br/>
+<br/>
+
+```math
+\bar{v} = \begin{pmatrix} \color{red}x \\ \color{green}y \\ \color{blue}z \\ \vdots \end{pmatrix}
+```
+
+</Note>
+
+From such **abstraction**, we achieve **generalization**. Instead of solving a specific problem, mathematicians provide us tools (operations) 
+that can be useful in many fields. However! we won't go into such axioms as we're not interested in **abstract** thinking here.
+We're aiming to do something **concrete** **linear transformation** of a set of vertices (models). 
 So it would be ideal for us to think of them like this:
 
-- A vector describes a series of steps to perform a **transformation** in space.
-- A vector has the properties: **direction** and **magntitude**.
-- If its **magntitude** is exactly **1**, then it describes a **direction** in space and is called a **unit vector**.
+- A vector describes a series of steps for performing a **transformation** in space.
+- A vector has 2 properties: **direction** and **magntitude**.
+- If its **magntitude** is exactly **1**, then it only describes a **direction** in space and is called a **unit vector**.
 
-Let's go over these points one by one.
+Let's go over these points one by one. We'll focus mostly on **2-dimensional** vectors for simplicity and easier
+visualization, but same principles easily extend to **3-dimensions**.
 
-**Basis Vector**
+Given the vector $\bar{V}$; the first element ($\color{red}\bar{V}_{x}$) tells us how much to move **horizontally**---along the $\color{red}x$-axis;
+and the second element ($\color{green}\bar{V}_{y}$) tells us how much to move **vertically**---along the $\color{green}y$-axis:
+
+<Note type="image", title="">
+
+**Insert image here**
+
+$\color{red}\bar{V}_{x}$: move $-5$ units parallel to the $\color{red}x$-axis (left)
+
+$\color{green}\bar{V}_{y}$: move $+3$ units parallel to the $\color{green}y$-axis (up)
+
+</Note>
+
+As you can see, it's just elementary school number line, but extended into a higher dimension; very simple.
+
+If you paid close attention, you can see that there's an imaginary **triangle** formed there! $\color{red}\bar{V}_{x}$ as the **adjacent** side,
+$\color{green}\bar{V}_{y}$ as the **oppoosite** side and the $\bar{V}$ itself as the **hypotenuse**. 
+<Note type="image", title="">
+
+**Insert image here**
+
+</Note>
+
+And if you're clever enough, you've already figured out how to calculate the **length** of $\bar{V}$!
+Using the **pythagorean theorem**, we can calculate it like so:
+
+<Note type="math", title="">
+
+```math
+\Vert\bar{V}\Vert = \sqrt{\color{red}x^2 \color{white}+ \color{green}y^2} \color{white}= \sqrt{\color{red}(-5)^2 \color{white}+ \color{green}(3)^2} \color{white}\approx5.83
+```
+
+And if $\bar{V}$ is 3-dimensional:
+
+```math
+\Vert\bar{V}\Vert = \sqrt{\color{red}x^2 \color{white}+ \color{green}y^2 \color{white}+ \color{blue}z^2}
+```
+
+</Note>
 
 **Additions**
 
-**Multiplication**
-
 **Scalar Operations**
 
-**Cross Product**
+**Multiplication --- Cross Product**
 
-**Dot Product**
+**Multiplication --- Dot Product**
+There's another piece of information we can extract using **trigonometry**.
 
 The **length** of the vector isn't the only thing we can get from **trigonometry**. We can also
 **compare** the **directions** of two vectors. But this needs a bit of explaination.
 
 Imagine two vectors: the $\color{red}\hat{i}$ and the $\color{green}\hat{j}$
-
-
 
 Let's discuss **scalar** operations. A **scalar** is a number that **scales** the vector by itself.
 Most often we're only interested in doing **multiplication** (denoted by $\cdot$ symbol). Yet the other 3 operatoins (/, +, -) are also defined
@@ -543,11 +622,8 @@ Subtraction
 
 <Note title="The Essence of Linear Algebra">
 
-A **visual** and very **intuitive** explaination of these concepts is beyond the scope of this article.
-If you're interested in **mathematics** (bet you are) and **visualization**,
-then I highly recommend watching the [Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) 
-by **3Blue1Brown**.
-His math series can give you a great intuitive understanding using very smooth visuals.
+If you're interested in **mathematics** (bet you are) and **visualization**, then I highly recommend watching the [Essence of Linear Algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab) 
+by **3Blue1Brown**. His math series gives you great intuitive understanding of linear algebra.
 And much of my own understanding comes from this series---and the other sources references at the end.
 
 </Note>
@@ -564,7 +640,7 @@ And much of my own understanding comes from this series---and the other sources 
 
 **Division (or lack there of)**
 
-**Identity Matrix**
+**Identity Matrix & Basis Vectors**
 
 ## Linear Algebra --- Transformations
 
@@ -588,12 +664,6 @@ I've left links at the end of this article for further study.
 </Note>
 
 **Translation**
-
-<Note type="info", title="Homogeneous coordinates">
-
-Why are we using 4D matrixes for vertices that are three dimensional?
-
-</Note>
 
 **Embedding it all in one matrix**
 
