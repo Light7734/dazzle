@@ -11,11 +11,11 @@
 	.tooltip {
 		position: relative;
 		display: inline-block;
-		
-        font-weight: 600;
-        font-style: italic;
-        color: #fabd2f;
-        border-bottom: 1px dotted  #fe8019;
+
+		font-weight: 600;
+		font-style: italic;
+		color: #fabd2f;
+		border-bottom: 1px dotted #fe8019;
 	}
 
 	/* Tooltip text */
@@ -25,14 +25,14 @@
 		max-width: 60ch;
 		min-width: 60ch;
 		margin-left: -30ch; /* Use half of the width (120/2 = 60), to center the tooltip */
-        margin-top: .5em;
+		margin-top: 0.5em;
 
-		background-color: #282828ea;
+		background-color: #282828f5;
 		text-wrap-mode: wrap;
 		text-align: justify;
-        padding: 1em;
+		padding: 1em;
 		border-radius: 6px;
-        border: 1px solid #fe8019;
+		border: 1px solid #fe8019;
 
 		top: 100%;
 		left: 50%;
@@ -47,7 +47,7 @@
 		visibility: visible;
 	}
 
-    .tooltip:hover {
-        color: #fe8019;
-    }
+	.tooltip:hover {
+		color: #fe8019;
+	}
 </style>
