@@ -1,13 +1,45 @@
 kind: pipeline
-type: docker
-name: default
+type: docker 
+name: deploy_dev
+
+trigger:
+  branch:
+  - main
 
 steps:
-  - name: build_deploy
-    privileged: true
-    image: node:latest
-    commands:
-      - rm -rf ./node_modules
-      - npm install
-      - npm run build
-      - cp -r ./build/* /dazzle/
+- name: build
+  image: node:latest
+  commands:
+    - npm install
+    - npm run build
+
+- name: deploy
+  image: byteflair/scp
+  commands:
+    - ssh 'light@5.75.206.84' 'rm -rf /home/light/dazzle_dev/*'
+    - mv ./build ./dazzle_dev
+    - scp -r './dazzle_dev/' 'light@5.75.206.84:/home/light/'
+
+---
+kind: pipeline
+type: docker 
+name: deploy_prod
+
+trigger:
+  event:
+  - tag
+
+steps:
+- name: build
+  image: node:latest
+  commands:
+    - npm install
+    - npm run build
+
+- name: deploy
+  image: byteflair/scp
+  commands: 
+    - ssh 'light@5.75.206.84' 'rm -rf /home/light/dazzle/*'
+    - mv ./build .dazzle/
+    - scp -r './dazzle/' 'light@5.75.206.84:/home/light/'
+
