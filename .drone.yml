@@ -40,6 +40,6 @@ steps:
   image: byteflair/scp
   commands: 
     - ssh 'light@5.75.206.84' 'rm -rf /home/light/dazzle/*'
-    - mv ./build .dazzle/
+    - mv ./build ./dazzle/
     - scp -r './dazzle/' 'light@5.75.206.84:/home/light/'
 
