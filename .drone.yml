@@ -17,12 +17,18 @@ steps:
   image: byteflair/scp
   commands:
     - mv ./build ./dazzle_dev_staging
-    - scp -r './dazzle_dev_staging' 'light@5.75.206.84:/home/light/'
-    - ssh -t 'light@5.75.206.84' 'rm -rf /home/light/dazzle_dev/*'
-    - ssh -t 'light@5.75.206.84' 'mv /home/light/dazzle_dev_staging/* /home/light/dazzle_dev/'
-    - ssh -t 'light@5.75.206.84' 'chmod -R 755 /home/light/dazzle_dev/*'
-    - ssh -t 'light@5.75.206.84' 'rm -rf /home/light/dazzle_dev_staging'
 
+    # Stage
+    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_dev_staging'
+    - scp -r './dazzle_dev_staging' 'light@5.75.206.84:/home/light/'
+
+    # Move to endpoint
+    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_dev/*'
+    - ssh -tt 'light@5.75.206.84' 'sudo mv /home/light/dazzle_dev_staging/* /home/light/dazzle_dev/'
+    - ssh -tt 'light@5.75.206.84' 'sudo chmod -R 755 /home/light/dazzle_dev/*'
+
+    # Remove staging
+    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_dev_staging'
 ---
 kind: pipeline
 type: docker 
