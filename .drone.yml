@@ -48,7 +48,16 @@ steps:
 - name: deploy
   image: byteflair/scp
   commands: 
-    - ssh 'light@5.75.206.84' 'rm -rf /home/light/dazzle/*'
-    - mv ./build ./dazzle/
-    - scp -r './dazzle/' 'light@5.75.206.84:/home/light/'
+    - mv ./build ./dazzle_staging
 
+    # Stage
+    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_staging'
+    - scp -r './dazzle_staging' 'light@5.75.206.84:/home/light/'
+
+    # Move to endpoint
+    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_dev/*'
+    - ssh -tt 'light@5.75.206.84' 'sudo mv /home/light/dazzle_staging/* /home/light/dazzle_dev/'
+    - ssh -tt 'light@5.75.206.84' 'sudo chmod -R 755 /home/light/dazzle_dev/*'
+
+    # Remove staging
+    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_staging'
