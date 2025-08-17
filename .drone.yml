@@ -54,8 +54,8 @@ steps:
     - scp -r './dazzle_staging' 'light@5.75.206.84:/home/light/'
 
     # Move to endpoint
-    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_dev/*'
-    - ssh -tt 'light@5.75.206.84' 'sudo mv /home/light/dazzle_staging/* /home/light/dazzle_dev/'
+    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle/*'
+    - ssh -tt 'light@5.75.206.84' 'sudo mv /home/light/dazzle_staging/* /home/light/dazzle/'
 
     # Remove staging
     - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_staging'
