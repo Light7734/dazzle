@@ -13,8 +13,8 @@ steps:
   commands:
     - npm install
     - npm run build
-    - rm -rf /dazzle/*'
-    - mv ./build/* /dazzle/'
+    - rm -rf /dazzle/*
+    - mv ./build/* /dazzle/
 ---
 kind: pipeline
 type: docker 
@@ -31,5 +31,5 @@ steps:
   commands:
     - npm install
     - npm run build
-    - rm -rf /dazzle/*'
-    - mv ./build/* /dazzle/'
+    - rm -rf /dazzle/*
+    - mv ./build/* /dazzle/
