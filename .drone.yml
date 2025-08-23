@@ -1,61 +1,35 @@
 kind: pipeline
 type: docker 
 name: deploy_dev
-
+node:
+  environment: ryali
 trigger:
   branch:
   - main
 
 steps:
-- name: build
+- name: build and deploy
   image: node:latest
   commands:
     - npm install
     - npm run build
-
-- name: deploy
-  image: byteflair/scp
-  commands:
-    - mv ./build ./dazzle_dev_staging
-
-    # Stage
-    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_dev_staging'
-    - scp -r './dazzle_dev_staging' 'light@5.75.206.84:/home/light/'
-
-    # Move to endpoint
-    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_dev/*'
-    - ssh -tt 'light@5.75.206.84' 'sudo mv /home/light/dazzle_dev_staging/* /home/light/dazzle_dev/'
-
-    # Remove staging
-    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_dev_staging'
+    - rm -rf /dazzle/*'
+    - mv ./build/* /dazzle/'
 ---
 kind: pipeline
 type: docker 
 name: deploy_prod
-
+node:
+  environment: ryali
 trigger:
   event:
   - tag
 
 steps:
-- name: build
+- name: build and deploy
   image: node:latest
   commands:
     - npm install
     - npm run build
-
-- name: deploy
-  image: byteflair/scp
-  commands: 
-    - mv ./build ./dazzle_staging
-
-    # Stage
-    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_staging'
-    - scp -r './dazzle_staging' 'light@5.75.206.84:/home/light/'
-
-    # Move to endpoint
-    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle/*'
-    - ssh -tt 'light@5.75.206.84' 'sudo mv /home/light/dazzle_staging/* /home/light/dazzle/'
-
-    # Remove staging
-    - ssh -tt 'light@5.75.206.84' 'sudo rm -rf /home/light/dazzle_staging'
+    - rm -rf /dazzle/*'
+    - mv ./build/* /dazzle/'
