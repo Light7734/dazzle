@@ -13,10 +13,9 @@
 
 			Dazzle is an effort to <strong>solidify</strong> my understading of the complex world of
 			computers. and to give back to the <strong>community</strong> 💖.
-			<br />
-			Please enjoy ;)
 		</p>
 
+		<br />
 		<h2 style:padding="0">The Graphics Pipeline</h2>
 		<Note type="none" flow="true">
 			<p>
