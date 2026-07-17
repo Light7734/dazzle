@@ -1,4 +1,0 @@
----
-title: C++ Technical Debt
-date: "April 20 - 2025"
----
