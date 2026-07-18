@@ -54,7 +54,7 @@ We'll cover this stage in depth very soon so don't panic (yet).
 Afterwards, the final geometric data are converted into <Tip text="pixels"> Pixel is the shorthand for **picture-element**, Voxel is the shorthand for **volumetric-element**. </Tip>
 and prepped for the **pixel processing** stage via a process called **rasterization**.
 In other words, this stage converts a rather abstract and internal presentation (geometry)
-into something more concrete (pixels). It's called rasterization because end the product is a <Tip text="raster">Noun. A rectangular pattern of parallel scanning lines followed by the electron beam on a television screen or computer monitor. -- 1930s: from German Raster, literally ‘screen’, from Latin rastrum ‘rake’, from ras- ‘scraped’, from the verb radere. ---Oxford Languages</Tip> 
+into something more concrete (pixels). It's called rasterization because the end product is a <Tip text="raster">Noun. A rectangular pattern of parallel scanning lines followed by the electron beam on a television screen or computer monitor. -- 1930s: from German Raster, literally ‘screen’, from Latin rastrum ‘rake’, from ras- ‘scraped’, from the verb radere. ---Oxford Languages</Tip> 
 (a grid) of pixels.
 
 The **pixel processing** stage then uses the rasterized geometry data (pixel data) to do
@@ -79,9 +79,6 @@ the target **surface**. Which can be anything like a VR headset or some other cr
 
 I hope it is now evident why I chose to split the concepts in 4-parts. So... let's jump right into the gory details of the **geometry processing**
 stage!
-
-
-
 
 ## Surfaces
 
@@ -148,8 +145,7 @@ is a **triangle**. But why not squares or polygons with a variable number of edg
 ## Why Triangles?
 
 In <Tip text="Euclidean geometry"> Developed by **Euclid** around 300 BCE, is based on five axioms. It describes properties of shapes, angles, and space using deductive reasoning. It remained the standard model of geometry for centuries until non-Euclidean geometries and general relativity showed its limits. It's still widely used in education, engineering, and **computer graphics**. ---Wikipedia </Tip>, triangles are always **planar** (they exist only in one plane), 
-any polygon composed of more than 3 points may break this rule, but why does polygons residing in one plane so important 
-to us?
+any polygon composed of more than 3 points may break this rule, but why is it so important that polygons reside in one plane?
 
 <Note title="Planar vs Non-Planar polygons" type="image">
 
@@ -179,7 +175,7 @@ Trust me, this will be a lot more convincing when we cover the **rasterization**
 As a bonus point to consider; present-day **hardware** and **algorithms** have become **extremely efficient** at processing 
 triangles by doing operations such as sorting, rasterizing, etc, after eons of evolving around them.
 
-We literary have a **fixed function** (unprogrammable) stage in the pipeline dedicated for rasterizing
+We literally have a **fixed function** (unprogrammable) stage in the pipeline dedicated for rasterizing
 triangles.
 
 </Note>
@@ -541,8 +537,8 @@ We're aiming to do something **concrete** **linear transformation** of a set of 
 So it would be ideal for us to think of them like this:
 
 - A vector describes a series of steps for performing a **transformation** in space.
-- A vector has 2 properties: **direction** and **magntitude**.
-- If its **magntitude** is exactly **1**, then it only describes a **direction** in space and is called a **unit vector**.
+- A vector has 2 properties: **direction** and **magnitude**.
+- If its **magnitude** is exactly **1**, then it only describes a **direction** in space and is called a **unit vector**.
 
 Let's go over these points one by one. We'll focus mostly on **2-dimensional** vectors for simplicity and easier
 visualization, but same principles easily extend to **3-dimensions**.
@@ -563,7 +559,7 @@ $\color{green}\bar{V}_{y}$: move $+3$ units parallel to the $\color{green}y$-axi
 As you can see, it's just elementary school number line, but extended into a higher dimension; very simple.
 
 If you paid close attention, you can see that there's an imaginary **triangle** formed there! $\color{red}\bar{V}_{x}$ as the **adjacent** side,
-$\color{green}\bar{V}_{y}$ as the **oppoosite** side and the $\bar{V}$ itself as the **hypotenuse**. 
+$\color{green}\bar{V}_{y}$ as the **opposite** side and the $\bar{V}$ itself as the **hypotenuse**. 
 <Note type="image", title="">
 
 **Insert image here**
@@ -597,12 +593,12 @@ And if $\bar{V}$ is 3-dimensional:
 There's another piece of information we can extract using **trigonometry**.
 
 The **length** of the vector isn't the only thing we can get from **trigonometry**. We can also
-**compare** the **directions** of two vectors. But this needs a bit of explaination.
+**compare** the **directions** of two vectors. But this needs a bit of explanation.
 
 Imagine two vectors: the $\color{red}\hat{i}$ and the $\color{green}\hat{j}$
 
 Let's discuss **scalar** operations. A **scalar** is a number that **scales** the vector by itself.
-Most often we're only interested in doing **multiplication** (denoted by $\cdot$ symbol). Yet the other 3 operatoins (/, +, -) are also defined
+Most often we're only interested in doing **multiplication** (denoted by $\cdot$ symbol). Yet the other 3 operations (/, +, -) are also defined
 for **scalars**. Here are two examples:
 
 <Note type="math", title="Scalar operations">
@@ -638,7 +634,7 @@ And much of my own understanding comes from this series---and the other sources 
 
 **Multiplication**
 
-**Division (or lack there of)**
+**Division (or lack thereof)**
 
 **Identity Matrix & Basis Vectors**
 
@@ -651,7 +647,7 @@ And much of my own understanding comes from this series---and the other sources 
 <Note type="info", title="Gimbal Lock">
 
 Representing rotations like this makes us prone to a phenomenon called **gimbal lock** where we lose
-an axis of control. A way of avoiding this is to rotate around an arbitary axis (makes it a lot harder
+an axis of control. A way of avoiding this is to rotate around an arbitrary axis (makes it a lot harder
 to happen but still possible).
 
 The ideal way however, is to use <Tip text="quaternions" >A quaternion is a four-part hyper-complex number used in three-dimensional rotations and orientations.
@@ -695,7 +691,7 @@ vertices whilst in the local space.
 Basically the vertices that are read from a model file is initially in local space.
 
 ## Coordinate System -- World Space
-This is the where our first transormation happens. If we were constructing a crime scene
+This is the where our first transformation happens. If we were constructing a crime scene
 without world space transformations then all our corpses would reside somewhere in [0, 0, 0] and
 would be inside each other (horrid, or lovely?).
 
@@ -706,7 +702,7 @@ spot, **rotate** it because why not, and **scale** it if the model needs scaling
 This transformation is stored in a matrix called the **model matrix**. This is the first of three primary
 **transformation** matrices which gets multiplied by our vertices.
 
-<Note tye="math", title="Model transformation">
+<Note type="math", title="Model transformation">
 
 ```math
 \text{model}_M * \text{local}_V
@@ -757,12 +753,12 @@ vector (R)
 ">>>>>" explain in depth why such operation makes the view rotate.
 
 Just like the **world space** transformation which is stored in the **model matrix**. 
-This transformation is stored in anoher matrix called the **view matrix**.
+This transformation is stored in anther matrix called the **view matrix**.
 
 So far we got this equation to apply the **world space** and **view space** transformations
 to the **local space** vertices of our model:
 
-<Note tye="math", title="Model_View transformation">
+<Note type="math", title="Model_View transformation">
 
 ```math
 \text{model}_M * \text{view}_M * \text{local}_V
@@ -784,7 +780,7 @@ That's two down, one left to slay!
 
 **Putting it all together**
 
-<Note tye="math", title="Model_View transformation">
+<Note type="math", title="Model_View transformation">
 
 ```math
 \text{model}_M * \text{view}_M * \text{projection}_M * \text{local}_V 
@@ -811,7 +807,7 @@ That's two down, one left to slay!
 </Note>
 
 ## Geometry Shader (optional stage)
-**We can generate more geometry here since some geometric details are expressed more efficiently through mathmatical expressions than raw vertex data**
+**We can generate more geometry here since some geometric details are expressed more efficiently through mathematical expressions than raw vertex data**
 
 **Different levels of parallelism (why do we still need the vertex shader)**
 
@@ -819,7 +815,7 @@ That's two down, one left to slay!
 
 **Adjecency primitive types**
 
-**Primitive type only indicates number of input vertices since the primitive itself will get cconsumed**
+**Primitive type only indicates number of input vertices since the primitive itself will get consumed**
 
 **Geometry shader instancing**
 
@@ -833,7 +829,7 @@ That's two down, one left to slay!
 
 **Why do we subdivide?**
 
-**Mathmatical presentation more compressed than actual vertex data**
+**Mathematical presentation more compressed than actual vertex data**
 
 **Geometry shaders are versatile, not performant**
 
@@ -863,7 +859,7 @@ Let's wrap up!
 
 Prepared Vertex Data -> 
 
-Input Assembly turns Vertex Data into digestable structures for the Vertex Shader  -> 
+Input Assembly turns Vertex Data into digestible structures for the Vertex Shader  -> 
 
 Vertex Shader is invoked per vertex for applying transformations via some clever linear algebra -> 
 
@@ -874,7 +870,7 @@ Geometry & Tessellation Shaders expand the geometry on-the-fly and may apply mor
 </Note>
 
 The geometric detail that we now have is not **real**. Perfect triangle do not exist in the real world.
-Our next challenge in this journey is to turn these mathmatical representations into something
+Our next challenge in this journey is to turn these mathematical representations into something
 concrete and significant. We're gonna take these primitives and turn them into **pixels** through
 a fancy process called **rasterization**.
 
